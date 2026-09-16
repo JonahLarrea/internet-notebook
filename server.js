@@ -23,6 +23,19 @@ let documentChars = [];
 
 
 // --------------------------------
+// EMOJI DETECTION
+// --------------------------------
+
+function containsEmoji(text) {
+
+    return /[\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F\u200D]/u.test(
+        text
+    );
+
+}
+
+
+// --------------------------------
 // LOAD SAVED NOTEBOOK
 // --------------------------------
 
@@ -37,7 +50,9 @@ function loadDocument() {
             );
 
             return;
+
         }
+
 
         const saved =
             fs.readFileSync(
@@ -45,12 +60,53 @@ function loadDocument() {
                 "utf8"
             );
 
+
         const parsed =
             JSON.parse(saved);
 
+
         if (Array.isArray(parsed)) {
 
-            documentChars = parsed;
+            // Remove any emojis that may
+            // already exist in old saved data.
+
+            documentChars =
+                parsed.filter(
+                    (character) => {
+
+                        if (
+                            !character ||
+                            typeof character.char !== "string"
+                        ) {
+
+                            return false;
+
+                        }
+
+
+                        if (
+                            containsEmoji(
+                                character.char
+                            )
+                        ) {
+
+                            console.log(
+                                "Removed saved emoji:",
+                                JSON.stringify(
+                                    character.char
+                                )
+                            );
+
+                            return false;
+
+                        }
+
+
+                        return true;
+
+                    }
+                );
+
 
             console.log(
                 "Loaded saved Notebook:",
@@ -78,40 +134,45 @@ function loadDocument() {
 
 let saveTimer = null;
 
+
 function saveDocument() {
 
     if (saveTimer) {
         return;
     }
 
-    saveTimer = setTimeout(() => {
 
-        saveTimer = null;
+    saveTimer =
+        setTimeout(() => {
 
-        try {
+            saveTimer = null;
 
-            fs.writeFileSync(
-                DATA_FILE,
-                JSON.stringify(
-                    documentChars
-                ),
-                "utf8"
-            );
 
-            console.log(
-                "Notebook saved."
-            );
+            try {
 
-        } catch (error) {
+                fs.writeFileSync(
+                    DATA_FILE,
+                    JSON.stringify(
+                        documentChars
+                    ),
+                    "utf8"
+                );
 
-            console.error(
-                "Could not save Notebook:",
-                error
-            );
 
-        }
+                console.log(
+                    "Notebook saved."
+                );
 
-    }, 500);
+            } catch (error) {
+
+                console.error(
+                    "Could not save Notebook:",
+                    error
+                );
+
+            }
+
+        }, 500);
 
 }
 
@@ -131,8 +192,13 @@ function sendDocument(socket) {
 
     socket.send(
         JSON.stringify({
-            type: "document",
-            chars: documentChars
+
+            type:
+                "document",
+
+            chars:
+                documentChars
+
         })
     );
 
@@ -147,6 +213,7 @@ function broadcast(message) {
 
     const text =
         JSON.stringify(message);
+
 
     wss.clients.forEach(
         (client) => {
@@ -176,6 +243,7 @@ function findIndex(id) {
         return -1;
     }
 
+
     return documentChars.findIndex(
         (character) =>
             character.id === id
@@ -196,6 +264,7 @@ wss.on(
             "Someone connected."
         );
 
+
         socket.userId = null;
 
 
@@ -210,6 +279,7 @@ wss.on(
             (rawMessage) => {
 
                 let data;
+
 
                 try {
 
@@ -243,13 +313,16 @@ wss.on(
 
                     }
 
+
                     socket.userId =
                         data.userId;
+
 
                     console.log(
                         "User connected:",
                         socket.userId
                     );
+
 
                     return;
 
@@ -285,6 +358,32 @@ wss.on(
 
                     }
 
+
+                    // --------------------------------
+                    // ABSOLUTE SERVER-SIDE EMOJI BLOCK
+                    // --------------------------------
+
+                    if (
+                        containsEmoji(
+                            data.char
+                        )
+                    ) {
+
+                        console.log(
+                            "BLOCKED emoji from",
+                            socket.userId
+                        );
+
+
+                        return;
+
+                    }
+
+
+                    // --------------------------------
+                    // MUST BE ONE CHARACTER
+                    // --------------------------------
+
                     if (
                         data.char.length !==
                         1
@@ -294,13 +393,15 @@ wss.on(
 
                     }
 
+
                     const afterId =
                         data.afterId ??
                         null;
 
 
-                    // Don't allow
-                    // duplicate IDs.
+                    // --------------------------------
+                    // DON'T ALLOW DUPLICATE IDS
+                    // --------------------------------
 
                     if (
                         findIndex(
@@ -431,7 +532,8 @@ wss.on(
 
 
                     if (
-                        index === -1
+                        index ===
+                        -1
                     ) {
 
                         return;
@@ -445,8 +547,9 @@ wss.on(
                         ];
 
 
-                    // SERVER-SIDE
-                    // OWNERSHIP CHECK
+                    // --------------------------------
+                    // SERVER-SIDE OWNERSHIP CHECK
+                    // --------------------------------
 
                     if (
                         character.owner !==
@@ -457,6 +560,7 @@ wss.on(
                             "BLOCKED deletion by",
                             socket.userId
                         );
+
 
                         return;
 
@@ -522,7 +626,9 @@ wss.on(
 // SERVER
 // --------------------------------
 
-const PORT = process.env.PORT || 3000;
+const PORT =
+    process.env.PORT || 3000;
+
 
 server.listen(
     PORT,

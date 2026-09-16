@@ -1,85 +1,86 @@
-<!DOCTYPE html> 
-<html lang="en"> 
- 
-<head> 
- 
-    <meta charset="UTF-8"> 
- 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
- 
-    <title>The Internet Notebook</title> 
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>The Internet Notebook</title>
+
     <link rel="icon" type="image/png" href="/favicon.png">
- 
-    <style> 
- 
-        * { 
-            box-sizing: border-box; 
-        } 
- 
-        body { 
-            margin: 0; 
-            background: #eee9df; 
-            color: #292722; 
-            font-family: Georgia, "Times New Roman", serif; 
-        } 
- 
-        header { 
-            text-align: center; 
-            padding: 45px 20px 25px; 
-        } 
- 
-        h1 { 
-            margin: 0; 
-            font-size: 42px; 
-            font-weight: normal; 
-            letter-spacing: 1px; 
-        } 
- 
-        .subtitle { 
-            margin-top: 10px; 
-            color: #777168; 
-            font-size: 15px; 
-        } 
- 
-        .notebook { 
-            width: 92%; 
-            max-width: 900px; 
-            margin: 20px auto 60px; 
-            background: #fffdf7; 
-            min-height: 80vh; 
-            padding: 50px 55px; 
- 
-            box-shadow: 
-                0 4px 18px rgba(0,0,0,0.12); 
- 
-            position: relative; 
-        } 
- 
-        .page { 
- 
-            min-height: 70vh; 
- 
-            font-size: 21px; 
-            line-height: 1.8; 
- 
-            outline: none; 
- 
-            white-space: pre-wrap; 
- 
-            background-image: 
-                linear-gradient( 
-                    transparent 96%, 
-                    #e4ded2 96% 
-                ); 
- 
-            background-size: 100% 1.8em; 
-        } 
- 
-        .page:empty:before { 
-            content: Loading...; 
-            color: #aaa49b; 
-        } 
- 
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #eee9df;
+            color: #292722;
+            font-family: Georgia, "Times New Roman", serif;
+        }
+
+        header {
+            text-align: center;
+            padding: 45px 20px 25px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 42px;
+            font-weight: normal;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            margin-top: 10px;
+            color: #777168;
+            font-size: 15px;
+        }
+
+        .notebook {
+            width: 92%;
+            max-width: 900px;
+            margin: 20px auto 60px;
+            background: #fffdf7;
+            min-height: 80vh;
+            padding: 50px 55px;
+
+            box-shadow:
+                0 4px 18px rgba(0,0,0,0.12);
+
+            position: relative;
+        }
+
+        .page {
+
+            min-height: 70vh;
+
+            font-size: 21px;
+            line-height: 1.8;
+
+            outline: none;
+
+            white-space: pre-wrap;
+
+            background-image:
+                linear-gradient(
+                    transparent 96%,
+                    #e4ded2 96%
+                );
+
+            background-size: 100% 1.8em;
+        }
+
+        .page:empty:before {
+            content: "Loading...";
+            color: #aaa49b;
+        }
+
         .support {
             text-align: center;
             margin: 0 auto 20px;
@@ -94,1246 +95,1479 @@
         .support a:hover {
             text-decoration: underline;
         }
- 
-        footer { 
-            text-align: center; 
-            padding: 20px; 
-            color: #8b857c; 
-            font-size: 13px; 
-        } 
- 
-        @media (max-width: 600px) { 
- 
-            header { 
-                padding-top: 30px; 
-            } 
- 
-            h1 { 
-                font-size: 32px; 
-            } 
- 
-            .notebook { 
-                width: 95%; 
-                padding: 30px 25px; 
-            } 
- 
-            .page { 
-                font-size: 18px; 
-            } 
- 
-        } 
- 
-    </style> 
- 
-</head> 
- 
- 
-<body> 
- 
- 
-<header> 
- 
-    <h1>📒 The Internet Notebook 📒</h1> 
- 
-    <div class="subtitle"> 
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #8b857c;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+
+            header {
+                padding-top: 30px;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+
+            .notebook {
+                width: 95%;
+                padding: 30px 25px;
+            }
+
+            .page {
+                font-size: 18px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <h1>The Internet Notebook</h1>
+
+    <div class="subtitle">
         welcome :)
-    </div> 
- 
-</header> 
- 
- 
-<main class="notebook"> 
- 
-    <div 
-        id="page" 
-        class="page" 
-        contenteditable="true" 
-        spellcheck="true" 
-    ></div> 
- 
-</main> 
- 
- 
+    </div>
+
+</header>
+
+
+<main class="notebook">
+
+    <div
+        id="page"
+        class="page"
+        contenteditable="true"
+        spellcheck="true"
+    ></div>
+
+</main>
+
+
 <div class="support">
 
     <a
-        href="https://buymeacoffee.com/jonahlarrea"
+        href="https://buymeacoffee.com/theinternetnotebook"
         target="_blank"
         rel="noopener noreferrer"
     >
-        ❤️ help keep the notebook alive
+       ❤️ help keep the notebook alive
     </a>
 
 </div>
 
 
+<script>
 
- 
- 
-</body> 
-<script> 
- 
-    // -------------------------------- 
-    // ANONYMOUS BROWSER ID 
-    // -------------------------------- 
- 
-    let userId = 
-        localStorage.getItem( 
-            "notebookUserId" 
-        ); 
- 
-    if (!userId) { 
- 
-        userId = 
-            crypto.randomUUID(); 
- 
-        localStorage.setItem( 
-            "notebookUserId", 
-            userId 
-        ); 
-    } 
- 
- 
-    console.log( 
-        "Your anonymous ID:", 
-        userId 
-    ); 
- 
- 
-    // -------------------------------- 
-    // NOTEBOOK 
-    // -------------------------------- 
- 
-    const page = 
-        document.getElementById( 
-            "page" 
-        ); 
- 
- 
-    let documentChars = []; 
- 
-    let initialised = false; 
- 
- 
-    // -------------------------------- 
-    // WEBSOCKET 
-    // -------------------------------- 
- 
-    const protocol = 
-    window.location.protocol === "https:" 
-        ? "wss:" 
-        : "ws:"; 
- 
-const socket = new WebSocket( 
-    `${protocol}//${window.location.host}` 
-); 
- 
- 
-    socket.addEventListener( 
-        "open", 
-        () => { 
- 
-            console.log( 
-                "Connected to Internet Notebook." 
-            ); 
- 
- 
-            // Tell the server who this 
-            // browser is. 
- 
-            socket.send( 
-                JSON.stringify({ 
-                    type: "hello", 
-                    userId: userId 
-                }) 
-            ); 
- 
-        } 
-    ); 
- 
- 
-    // -------------------------------- 
-    // FIND CHARACTER 
-    // -------------------------------- 
- 
-    function findCharacterIndex(id) { 
- 
-        return documentChars.findIndex( 
-            (character) => 
-                character.id === id 
-        ); 
- 
-    } 
- 
- 
-    // -------------------------------- 
-    // CARET POSITION 
-    // -------------------------------- 
- 
-    function getCaretIndex() { 
- 
-        const selection = 
-            window.getSelection(); 
- 
- 
-        if (!selection.rangeCount) { 
-            return 0; 
-        } 
- 
- 
-        const range = 
-            selection.getRangeAt(0); 
- 
- 
-        const preRange = 
-            range.cloneRange(); 
- 
- 
-        preRange.selectNodeContents( 
-            page 
-        ); 
- 
- 
-        preRange.setEnd( 
-            range.startContainer, 
-            range.startOffset 
-        ); 
- 
- 
-        return preRange 
-            .toString() 
-            .length; 
- 
-    } 
- 
- 
-    function setCaretIndex(index) { 
- 
-        const selection = 
-            window.getSelection(); 
- 
- 
-        const range = 
-            document.createRange(); 
- 
- 
-        let remaining = index; 
- 
- 
-        function walk(node) { 
- 
-            if ( 
-                node.nodeType === 
-                Node.TEXT_NODE 
-            ) { 
- 
-                const length = 
-                    node.textContent.length; 
- 
- 
-                if ( 
-                    remaining <= length 
-                ) { 
- 
-                    range.setStart( 
-                        node, 
-                        remaining 
-                    ); 
- 
-                    range.collapse( 
-                        true 
-                    ); 
- 
-                    return true; 
-                } 
- 
- 
-                remaining -= length; 
- 
-            } 
- 
- 
-            for ( 
-                const child of 
-                    node.childNodes 
-            ) { 
- 
-                if (walk(child)) { 
-                    return true; 
-                } 
- 
-            } 
- 
- 
-            return false; 
-        } 
- 
- 
-        if (!walk(page)) { 
- 
-            range.selectNodeContents( 
-                page 
-            ); 
- 
-            range.collapse(false); 
- 
-        } 
- 
- 
-        selection.removeAllRanges(); 
- 
-        selection.addRange(range); 
- 
-    } 
- 
- 
-    // -------------------------------- 
-    // CREATE CHARACTER DOM ELEMENT 
-    // -------------------------------- 
- 
-function createCharacterElement( 
-    character 
-) { 
- 
-    const span = 
-        document.createElement( 
-            "span" 
-        ); 
- 
- 
-    span.dataset.id = 
-        character.id; 
- 
- 
-    span.dataset.owner = 
-        character.owner; 
- 
- 
-    span.textContent = 
-        character.char; 
- 
- 
-    if ( 
-        character.owner === userId 
-    ) { 
-        span.style.fontWeight = 
-            "bold"; 
-    } 
- 
- 
-    return span; 
-} 
- 
- 
-    // -------------------------------- 
-    // FIND DOM CHARACTER 
-    // -------------------------------- 
- 
-    function findDomCharacter(id) { 
- 
-        return page.querySelector( 
-            `[data-id="${id}"]` 
-        ); 
- 
-    } 
- 
- 
-    // -------------------------------- 
-    // INSERT INTO DOM 
-    // -------------------------------- 
- 
-    function insertDomCharacter( 
-        character 
-    ) { 
- 
-        // Already exists? 
-        if ( 
-            findDomCharacter( 
-                character.id 
-            ) 
-        ) { 
-            return; 
-        } 
- 
- 
-        const element = 
-            createCharacterElement( 
-                character 
-            ); 
- 
- 
-        if ( 
-            character.afterId === null 
-        ) { 
- 
-            page.insertBefore( 
-                element, 
-                page.firstChild 
-            ); 
- 
-            return; 
-        } 
- 
- 
-        const previous = 
-            findDomCharacter( 
-                character.afterId 
-            ); 
- 
- 
-        if (!previous) { 
- 
-            // Something is out of sync. 
-            // The server will eventually 
-            // send a fresh document. 
- 
-            console.log( 
-                "Could not find insertion point." 
-            ); 
- 
-            return; 
-        } 
- 
- 
-        previous.after(element); 
- 
-    } 
- 
- 
-    // -------------------------------- 
-    // DELETE FROM DOM 
-    // -------------------------------- 
- 
-    function deleteDomCharacter(id) { 
- 
-        const element = 
-            findDomCharacter(id); 
- 
- 
-        if (element) { 
-            element.remove(); 
-        } 
- 
-    } 
- 
- 
-    // -------------------------------- 
-    // INITIAL DOCUMENT 
-    // -------------------------------- 
- 
-    function renderInitialDocument() { 
- 
-        page.innerHTML = ""; 
- 
- 
-        documentChars.forEach( 
-            (character) => { 
- 
-                const element = 
-                    createCharacterElement( 
-                        character 
-                    ); 
- 
-                page.appendChild( 
-                    element 
-                ); 
- 
-            } 
-        ); 
- 
-    } 
- 
- 
-    // -------------------------------- 
-    // SERVER MESSAGES 
-    // -------------------------------- 
- 
-    socket.addEventListener( 
-        "message", 
-        (event) => { 
- 
-            const data = 
-                JSON.parse( 
-                    event.data 
-                ); 
- 
- 
-            // ------------------------- 
-            // INITIAL DOCUMENT 
-            // ------------------------- 
- 
-            if ( 
-                data.type === 
-                "document" 
-            ) { 
- 
-                documentChars = 
-                    data.chars || []; 
- 
- 
-                renderInitialDocument(); 
- 
- 
-                initialised = true; 
- 
- 
-                console.log( 
-                    "Notebook loaded:", 
-                    documentChars.length, 
-                    "characters" 
-                ); 
- 
- 
-                return; 
-            } 
- 
- 
-            // ------------------------- 
-            // REMOTE INSERT 
-            // ------------------------- 
- 
-            if ( 
-                data.type === 
-                "insert" 
-            ) { 
- 
-                const character = 
-                    data.character; 
- 
- 
-                // Ignore if we already 
-                // inserted this locally. 
- 
-                if ( 
-                    findCharacterIndex( 
-                        character.id 
-                    ) !== -1 
-                ) { 
-                    return; 
-                } 
- 
- 
-                const caret = 
-                    document.activeElement === 
-                    page 
-                        ? getCaretIndex() 
-                        : null; 
- 
- 
-                let insertIndex = 0; 
- 
- 
-                if ( 
-                    character.afterId !== 
-                    null 
-                ) { 
- 
-                    const afterIndex = 
-                        findCharacterIndex( 
-                            character.afterId 
-                        ); 
- 
- 
-                    if ( 
-                        afterIndex === -1 
-                    ) { 
-                        return; 
-                    } 
- 
- 
-                    insertIndex = 
-                        afterIndex + 1; 
- 
-                } 
- 
- 
-                documentChars.splice( 
-                    insertIndex, 
-                    0, 
-                    character 
-                ); 
- 
- 
-                insertDomCharacter( 
-                    character 
-                ); 
- 
- 
-                // Keep the user's cursor 
-                // in the same logical place. 
- 
-                if ( 
-                    caret !== null 
-                ) { 
- 
-                    if ( 
-                        insertIndex <= caret 
-                    ) { 
-                        setCaretIndex( 
-                            caret + 1 
-                        ); 
-                    } else { 
-                        setCaretIndex( 
-                            caret 
-                        ); 
-                    } 
- 
-                } 
- 
- 
-                return; 
-            } 
- 
- 
-            // ------------------------- 
-            // REMOTE DELETE 
-            // ------------------------- 
- 
-            if ( 
-                data.type === 
-                "delete" 
-            ) { 
- 
-                const index = 
-                    findCharacterIndex( 
-                        data.id 
-                    ); 
- 
- 
-                if (index === -1) { 
-                    return; 
-                } 
- 
- 
-                const caret = 
-                    document.activeElement === 
-                    page 
-                        ? getCaretIndex() 
-                        : null; 
- 
- 
-                documentChars.splice( 
-                    index, 
-                    1 
-                ); 
- 
- 
-                deleteDomCharacter( 
-                    data.id 
-                ); 
- 
- 
-                if ( 
-                    caret !== null 
-                ) { 
- 
-                    if ( 
-                        index < caret 
-                    ) { 
-                        setCaretIndex( 
-                            caret - 1 
-                        ); 
-                    } else { 
-                        setCaretIndex( 
-                            caret 
-                        ); 
-                    } 
- 
-                } 
- 
- 
-                return; 
-            } 
- 
-        } 
-    ); 
- 
- 
-    // -------------------------------- 
-    // LOCAL INSERT 
-    // -------------------------------- 
- 
-    function insertText( 
-        index, 
-        text 
-    ) { 
- 
-        for ( 
-            const char of text 
-        ) { 
- 
-            const afterId = 
-                index > 0 
-                    ? documentChars[ 
-                        index - 1 
-                    ].id 
-                    : null; 
- 
- 
-            const character = { 
- 
-                id: 
-                    crypto.randomUUID(), 
- 
-                char: 
-                    char, 
- 
-                owner: 
-                    userId, 
- 
-                afterId: 
-                    afterId 
- 
-            }; 
- 
- 
-            // Add it locally FIRST. 
-            // This makes typing feel 
-            // instant. 
- 
-            documentChars.splice( 
-                index, 
-                0, 
-                character 
-            ); 
- 
- 
-            insertDomCharacter( 
-                character 
-            ); 
- 
- 
-            // Then tell the server. 
- 
-            socket.send( 
-                JSON.stringify({ 
- 
-                    type: 
-                        "insert", 
- 
-                    id: 
-                        character.id, 
- 
-                    afterId: 
-                        afterId, 
- 
-                    char: 
-                        char 
- 
-                }) 
-            ); 
- 
- 
-            index++; 
- 
-        } 
- 
-    } 
- 
- 
-    // -------------------------------- 
-    // LOCAL DELETE 
-    // -------------------------------- 
- 
-    function deleteCharacter( 
-        character 
-    ) { 
- 
-        if ( 
-            character.owner !== 
-            userId 
-        ) { 
- 
-            console.log( 
-                "That character belongs to someone else." 
-            ); 
- 
-            return false; 
- 
-        } 
- 
- 
-        const index = 
-            findCharacterIndex( 
-                character.id 
-            ); 
- 
- 
-        if (index === -1) { 
-            return false; 
-        } 
- 
- 
-        // Remove locally immediately. 
- 
-        documentChars.splice( 
-            index, 
-            1 
-        ); 
- 
- 
-        deleteDomCharacter( 
-            character.id 
-        ); 
- 
- 
-        // Tell server. 
- 
-        socket.send( 
-            JSON.stringify({ 
- 
-                type: 
-                    "delete", 
- 
-                id: 
-                    character.id 
- 
-            }) 
- 
- 
-        ); 
- 
- 
-        return true; 
- 
-    } 
- 
- 
-    // -------------------------------- 
-    // BEFORE INPUT 
-    // -------------------------------- 
- 
-    page.addEventListener( 
-        "beforeinput", 
-        (event) => { 
- 
-            if (!initialised) { 
-                return; 
-            } 
- 
- 
-            event.preventDefault(); 
- 
- 
-            const selection = 
-                window.getSelection(); 
- 
- 
-            if ( 
-                !selection.rangeCount 
-            ) { 
-                return; 
-            } 
- 
- 
-            const range = 
-                selection.getRangeAt(0); 
- 
- 
-            // START 
- 
-            const startRange = 
-                range.cloneRange(); 
- 
- 
-            startRange.selectNodeContents( 
-                page 
-            ); 
- 
- 
-            startRange.setEnd( 
-                range.startContainer, 
-                range.startOffset 
-            ); 
- 
- 
-            const start = 
-                startRange 
-                    .toString() 
-                    .length; 
- 
- 
-            // END 
- 
-            const endRange = 
-                range.cloneRange(); 
- 
- 
-            endRange.selectNodeContents( 
-                page 
-            ); 
- 
- 
-            endRange.setEnd( 
-                range.endContainer, 
-                range.endOffset 
-            ); 
- 
- 
-            const end = 
-                endRange 
-                    .toString() 
-                    .length; 
- 
- 
-            const length = 
-                end - start; 
- 
- 
-            // -------------------------------- 
-            // NORMAL TYPING 
-            // -------------------------------- 
- 
-            if ( 
-                event.inputType === 
-                "insertText" 
-            ) { 
- 
-                const text = 
-                    event.data || ""; 
- 
- 
-                // Replace selected text. 
- 
-                if (length > 0) { 
- 
-                    const selected = 
-                        documentChars.slice( 
-                            start, 
-                            end 
-                        ); 
- 
- 
-                    const allowed = 
-                        selected.every( 
-                            (character) => 
-                                character.owner === 
-                                userId 
-                        ); 
- 
- 
-                    if (!allowed) { 
- 
-                        console.log( 
-                            "Cannot delete another user's characters." 
-                        ); 
- 
-                        setCaretIndex( 
-                            start 
-                        ); 
- 
-                        return; 
-                    } 
- 
- 
-                    selected.forEach( 
-                        deleteCharacter 
-                    ); 
- 
-                } 
- 
- 
-                insertText( 
-                    start, 
-                    text 
-                ); 
- 
- 
-                setCaretIndex( 
-                    start + 
-                    text.length 
-                ); 
- 
- 
-                return; 
-            } 
- 
- 
-            // -------------------------------- 
-            // ENTER 
-            // -------------------------------- 
- 
-            if ( 
-                event.inputType === 
-                "insertParagraph" 
-            ) { 
- 
-                if (length > 0) { 
- 
-                    const selected = 
-                        documentChars.slice( 
-                            start, 
-                            end 
-                        ); 
- 
- 
-                    const allowed = 
-                        selected.every( 
-                            (character) => 
-                                character.owner === 
-                                userId 
-                        ); 
- 
- 
-                    if (!allowed) { 
- 
-                        setCaretIndex( 
-                            start 
-                        ); 
- 
-                        return; 
-                    } 
- 
- 
-                    selected.forEach( 
-                        deleteCharacter 
-                    ); 
- 
-                } 
- 
- 
-                insertText( 
-                    start, 
-                    "\n" 
-                ); 
- 
- 
-                setCaretIndex( 
-                    start + 1 
-                ); 
- 
- 
-                return; 
-            } 
- 
- 
-            // -------------------------------- 
-            // BACKSPACE 
-            // -------------------------------- 
- 
-            if ( 
-                event.inputType === 
-                "deleteContentBackward" 
-            ) { 
- 
-                // Delete selection. 
- 
-                if (length > 0) { 
- 
-                    const selected = 
-                        documentChars.slice( 
-                            start, 
-                            end 
-                        ); 
- 
- 
-                    const allowed = 
-                        selected.every( 
-                            (character) => 
-                                character.owner === 
-                                userId 
-                        ); 
- 
- 
-                    if (!allowed) { 
- 
-                        console.log( 
-                            "Cannot delete another user's characters." 
-                        ); 
- 
-                        setCaretIndex( 
-                            start 
-                        ); 
- 
-                        return; 
-                    } 
- 
- 
-                    selected.forEach( 
-                        deleteCharacter 
-                    ); 
- 
- 
-                    setCaretIndex( 
-                        start 
-                    ); 
- 
- 
-                    return; 
-                } 
- 
- 
-                // Nothing before cursor. 
- 
-                if (start <= 0) { 
-                    return; 
-                } 
- 
- 
-                const character = 
-                    documentChars[ 
-                        start - 1 
-                    ]; 
- 
- 
-                if ( 
-                    deleteCharacter( 
-                        character 
-                    ) 
-                ) { 
- 
-                    setCaretIndex( 
-                        start - 1 
-                    ); 
- 
-                } 
- 
- 
-                return; 
-            } 
- 
- 
-            // -------------------------------- 
-            // DELETE KEY 
-            // -------------------------------- 
- 
-            if ( 
-                event.inputType === 
-                "deleteContentForward" 
-            ) { 
- 
-                // Delete selection. 
- 
-                if (length > 0) { 
- 
-                    const selected = 
-                        documentChars.slice( 
-                            start, 
-                            end 
-                        ); 
- 
- 
-                    const allowed = 
-                        selected.every( 
-                            (character) => 
-                                character.owner === 
-                                userId 
-                        ); 
- 
- 
-                    if (!allowed) { 
- 
-                        setCaretIndex( 
-                            start 
-                        ); 
- 
-                        return; 
-                    } 
- 
- 
-                    selected.forEach( 
-                        deleteCharacter 
-                    ); 
- 
- 
-                    setCaretIndex( 
-                        start 
-                    ); 
- 
- 
-                    return; 
-                } 
- 
- 
-                // Nothing after cursor. 
- 
-                if ( 
-                    start >= 
-                    documentChars.length 
-                ) { 
-                    return; 
-                } 
- 
- 
-                const character = 
-                    documentChars[ 
-                        start 
-                    ]; 
- 
- 
-                if ( 
-                    deleteCharacter( 
-                        character 
-                    ) 
-                ) { 
- 
-                    setCaretIndex( 
-                        start 
-                    ); 
- 
-                } 
- 
- 
-                return; 
-            } 
- 
-        } 
-    ); 
- 
- 
-    // -------------------------------- 
-    // PASTE 
-    // -------------------------------- 
- 
-    page.addEventListener( 
-        "paste", 
-        (event) => { 
- 
-            event.preventDefault(); 
- 
- 
-            const text = 
-                event.clipboardData 
-                    .getData("text"); 
- 
- 
-            if (!text) { 
-                return; 
-            } 
- 
- 
-            const start = 
-                getCaretIndex(); 
- 
- 
-            insertText( 
-                start, 
-                text 
-            ); 
- 
- 
-            setCaretIndex( 
-                start + text.length 
-            ); 
- 
-        } 
-    ); 
- 
- 
-    // -------------------------------- 
-    // CONNECTION CLOSED 
-    // -------------------------------- 
- 
-    socket.addEventListener( 
-        "close", 
-        () => { 
- 
-            console.log( 
-                "Disconnected from Internet Notebook." 
-            ); 
- 
-        } 
-    ); 
- 
-</script> 
+
+    // --------------------------------
+    // ANONYMOUS BROWSER ID
+    // --------------------------------
+
+    let userId =
+        localStorage.getItem(
+            "notebookUserId"
+        );
+
+
+    if (!userId) {
+
+        userId =
+            crypto.randomUUID();
+
+        localStorage.setItem(
+            "notebookUserId",
+            userId
+        );
+
+    }
+
+
+    console.log(
+        "Your anonymous ID:",
+        userId
+    );
+
+
+    // --------------------------------
+    // NOTEBOOK
+    // --------------------------------
+
+    const page =
+        document.getElementById(
+            "page"
+        );
+
+
+    let documentChars = [];
+
+    let initialised = false;
+
+
+    // --------------------------------
+    // EMOJI DETECTION
+    // --------------------------------
+
+    function containsEmoji(text) {
+
+        return /[\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F\u200D]/u.test(
+            text
+        );
+
+    }
+
+
+    // --------------------------------
+    // WEBSOCKET
+    // --------------------------------
+
+    const protocol =
+        window.location.protocol === "https:"
+            ? "wss:"
+            : "ws:";
+
+
+    const socket =
+        new WebSocket(
+            `${protocol}//${window.location.host}`
+        );
+
+
+    socket.addEventListener(
+        "open",
+        () => {
+
+            console.log(
+                "Connected to Internet Notebook."
+            );
+
+
+            socket.send(
+                JSON.stringify({
+                    type: "hello",
+                    userId: userId
+                })
+            );
+
+        }
+    );
+
+
+    // --------------------------------
+    // FIND CHARACTER
+    // --------------------------------
+
+    function findCharacterIndex(id) {
+
+        return documentChars.findIndex(
+            (character) =>
+                character.id === id
+        );
+
+    }
+
+
+    // --------------------------------
+    // CARET POSITION
+    // --------------------------------
+
+    function getCaretIndex() {
+
+        const selection =
+            window.getSelection();
+
+
+        if (!selection.rangeCount) {
+            return 0;
+        }
+
+
+        const range =
+            selection.getRangeAt(0);
+
+
+        const preRange =
+            range.cloneRange();
+
+
+        preRange.selectNodeContents(
+            page
+        );
+
+
+        preRange.setEnd(
+            range.startContainer,
+            range.startOffset
+        );
+
+
+        return preRange
+            .toString()
+            .length;
+
+    }
+
+
+    function setCaretIndex(index) {
+
+        const selection =
+            window.getSelection();
+
+
+        const range =
+            document.createRange();
+
+
+        let remaining = index;
+
+
+        function walk(node) {
+
+            if (
+                node.nodeType ===
+                Node.TEXT_NODE
+            ) {
+
+                const length =
+                    node.textContent.length;
+
+
+                if (
+                    remaining <= length
+                ) {
+
+                    range.setStart(
+                        node,
+                        remaining
+                    );
+
+                    range.collapse(
+                        true
+                    );
+
+                    return true;
+
+                }
+
+
+                remaining -= length;
+
+            }
+
+
+            for (
+                const child of
+                    node.childNodes
+            ) {
+
+                if (walk(child)) {
+                    return true;
+                }
+
+            }
+
+
+            return false;
+
+        }
+
+
+        if (!walk(page)) {
+
+            range.selectNodeContents(
+                page
+            );
+
+            range.collapse(false);
+
+        }
+
+
+        selection.removeAllRanges();
+
+        selection.addRange(range);
+
+    }
+
+
+    // --------------------------------
+    // CREATE CHARACTER DOM ELEMENT
+    // --------------------------------
+
+    function createCharacterElement(
+        character
+    ) {
+
+        const span =
+            document.createElement(
+                "span"
+            );
+
+
+        span.dataset.id =
+            character.id;
+
+
+        span.dataset.owner =
+            character.owner;
+
+
+        span.textContent =
+            character.char;
+
+
+        if (
+            character.owner === userId
+        ) {
+
+            span.style.fontWeight =
+                "bold";
+
+        }
+
+
+        return span;
+
+    }
+
+
+    // --------------------------------
+    // FIND DOM CHARACTER
+    // --------------------------------
+
+    function findDomCharacter(id) {
+
+        return page.querySelector(
+            `[data-id="${id}"]`
+        );
+
+    }
+
+
+    // --------------------------------
+    // INSERT INTO DOM
+    // --------------------------------
+
+    function insertDomCharacter(
+        character
+    ) {
+
+        if (
+            findDomCharacter(
+                character.id
+            )
+        ) {
+
+            return;
+
+        }
+
+
+        const element =
+            createCharacterElement(
+                character
+            );
+
+
+        if (
+            character.afterId === null
+        ) {
+
+            page.insertBefore(
+                element,
+                page.firstChild
+            );
+
+            return;
+
+        }
+
+
+        const previous =
+            findDomCharacter(
+                character.afterId
+            );
+
+
+        if (!previous) {
+
+            console.log(
+                "Could not find insertion point."
+            );
+
+            return;
+
+        }
+
+
+        previous.after(element);
+
+    }
+
+
+    // --------------------------------
+    // DELETE FROM DOM
+    // --------------------------------
+
+    function deleteDomCharacter(id) {
+
+        const element =
+            findDomCharacter(id);
+
+
+        if (element) {
+            element.remove();
+        }
+
+    }
+
+
+    // --------------------------------
+    // INITIAL DOCUMENT
+    // --------------------------------
+
+    function renderInitialDocument() {
+
+        page.innerHTML = "";
+
+
+        documentChars.forEach(
+            (character) => {
+
+                // Extra browser-side protection.
+                if (
+                    containsEmoji(
+                        character.char
+                    )
+                ) {
+                    return;
+                }
+
+
+                const element =
+                    createCharacterElement(
+                        character
+                    );
+
+
+                page.appendChild(
+                    element
+                );
+
+            }
+        );
+
+    }
+
+
+    // --------------------------------
+    // SERVER MESSAGES
+    // --------------------------------
+
+    socket.addEventListener(
+        "message",
+        (event) => {
+
+            const data =
+                JSON.parse(
+                    event.data
+                );
+
+
+            // -------------------------
+            // INITIAL DOCUMENT
+            // -------------------------
+
+            if (
+                data.type ===
+                "document"
+            ) {
+
+                documentChars =
+                    (data.chars || [])
+                        .filter(
+                            (character) =>
+                                typeof character.char === "string" &&
+                                !containsEmoji(
+                                    character.char
+                                )
+                        );
+
+
+                renderInitialDocument();
+
+
+                initialised = true;
+
+
+                console.log(
+                    "Notebook loaded:",
+                    documentChars.length,
+                    "characters"
+                );
+
+
+                return;
+
+            }
+
+
+            // -------------------------
+            // REMOTE INSERT
+            // -------------------------
+
+            if (
+                data.type ===
+                "insert"
+            ) {
+
+                const character =
+                    data.character;
+
+
+                // Never allow an emoji
+                // into this browser.
+
+                if (
+                    !character ||
+                    typeof character.char !== "string" ||
+                    containsEmoji(
+                        character.char
+                    )
+                ) {
+
+                    console.log(
+                        "Blocked emoji from entering browser."
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    findCharacterIndex(
+                        character.id
+                    ) !== -1
+                ) {
+
+                    return;
+
+                }
+
+
+                const caret =
+                    document.activeElement ===
+                    page
+                        ? getCaretIndex()
+                        : null;
+
+
+                let insertIndex = 0;
+
+
+                if (
+                    character.afterId !==
+                    null
+                ) {
+
+                    const afterIndex =
+                        findCharacterIndex(
+                            character.afterId
+                        );
+
+
+                    if (
+                        afterIndex === -1
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    insertIndex =
+                        afterIndex + 1;
+
+                }
+
+
+                documentChars.splice(
+                    insertIndex,
+                    0,
+                    character
+                );
+
+
+                insertDomCharacter(
+                    character
+                );
+
+
+                if (
+                    caret !== null
+                ) {
+
+                    if (
+                        insertIndex <= caret
+                    ) {
+
+                        setCaretIndex(
+                            caret + 1
+                        );
+
+                    } else {
+
+                        setCaretIndex(
+                            caret
+                        );
+
+                    }
+
+                }
+
+
+                return;
+
+            }
+
+
+            // -------------------------
+            // REMOTE DELETE
+            // -------------------------
+
+            if (
+                data.type ===
+                "delete"
+            ) {
+
+                const index =
+                    findCharacterIndex(
+                        data.id
+                    );
+
+
+                if (index === -1) {
+                    return;
+                }
+
+
+                const caret =
+                    document.activeElement ===
+                    page
+                        ? getCaretIndex()
+                        : null;
+
+
+                documentChars.splice(
+                    index,
+                    1
+                );
+
+
+                deleteDomCharacter(
+                    data.id
+                );
+
+
+                if (
+                    caret !== null
+                ) {
+
+                    if (
+                        index < caret
+                    ) {
+
+                        setCaretIndex(
+                            caret - 1
+                        );
+
+                    } else {
+
+                        setCaretIndex(
+                            caret
+                        );
+
+                    }
+
+                }
+
+
+                return;
+
+            }
+
+        }
+    );
+
+
+    // --------------------------------
+    // LOCAL INSERT
+    // --------------------------------
+
+    function insertText(
+        index,
+        text
+    ) {
+
+        // ABSOLUTE EMOJI BLOCK.
+        // Nothing gets inserted locally.
+        // Nothing gets sent to the server.
+
+        if (
+            containsEmoji(text)
+        ) {
+
+            console.log(
+                "Blocked emoji locally."
+            );
+
+            return 0;
+
+        }
+
+
+        let inserted = 0;
+
+
+        for (
+            const char of text
+        ) {
+
+            // Double-check every character.
+
+            if (
+                containsEmoji(char)
+            ) {
+
+                continue;
+
+            }
+
+
+            const afterId =
+                index > 0
+                    ? documentChars[
+                        index - 1
+                    ].id
+                    : null;
+
+
+            const character = {
+
+                id:
+                    crypto.randomUUID(),
+
+                char:
+                    char,
+
+                owner:
+                    userId,
+
+                afterId:
+                    afterId
+
+            };
+
+
+            // Add locally FIRST.
+
+            documentChars.splice(
+                index,
+                0,
+                character
+            );
+
+
+            insertDomCharacter(
+                character
+            );
+
+
+            // Then tell the server.
+
+            if (
+                socket.readyState ===
+                WebSocket.OPEN
+            ) {
+
+                socket.send(
+                    JSON.stringify({
+
+                        type:
+                            "insert",
+
+                        id:
+                            character.id,
+
+                        afterId:
+                            afterId,
+
+                        char:
+                            char
+
+                    })
+                );
+
+            }
+
+
+            index++;
+
+            inserted++;
+
+        }
+
+
+        return inserted;
+
+    }
+
+
+    // --------------------------------
+    // LOCAL DELETE
+    // --------------------------------
+
+    function deleteCharacter(
+        character
+    ) {
+
+        if (
+            character.owner !==
+            userId
+        ) {
+
+            console.log(
+                "That character belongs to someone else."
+            );
+
+            return false;
+
+        }
+
+
+        const index =
+            findCharacterIndex(
+                character.id
+            );
+
+
+        if (index === -1) {
+            return false;
+        }
+
+
+        documentChars.splice(
+            index,
+            1
+        );
+
+
+        deleteDomCharacter(
+            character.id
+        );
+
+
+        if (
+            socket.readyState ===
+            WebSocket.OPEN
+        ) {
+
+            socket.send(
+                JSON.stringify({
+
+                    type:
+                        "delete",
+
+                    id:
+                        character.id
+
+                })
+            );
+
+        }
+
+
+        return true;
+
+    }
+
+
+    // --------------------------------
+    // BEFORE INPUT
+    // --------------------------------
+
+    page.addEventListener(
+        "beforeinput",
+        (event) => {
+
+            if (!initialised) {
+                return;
+            }
+
+
+            // --------------------------------
+            // BLOCK ALL EMOJI INSERTION TYPES
+            // BEFORE THE BROWSER CAN INSERT THEM
+            // --------------------------------
+
+            if (
+                event.inputType === "insertText" ||
+                event.inputType === "insertCompositionText" ||
+                event.inputType === "insertReplacementText" ||
+                event.inputType === "insertFromPaste" ||
+                event.inputType === "insertFromDrop"
+            ) {
+
+                let incomingText =
+                    event.data || "";
+
+
+                if (
+                    event.inputType ===
+                    "insertFromPaste"
+                ) {
+
+                    incomingText =
+                        event.clipboardData
+                            ? event.clipboardData.getData("text")
+                            : incomingText;
+
+                }
+
+
+                if (
+                    containsEmoji(
+                        incomingText
+                    )
+                ) {
+
+                    event.preventDefault();
+
+                    console.log(
+                        "Blocked emoji before browser insertion."
+                    );
+
+                    return;
+
+                }
+
+            }
+
+
+            event.preventDefault();
+
+
+            const selection =
+                window.getSelection();
+
+
+            if (
+                !selection.rangeCount
+            ) {
+                return;
+            }
+
+
+            const range =
+                selection.getRangeAt(0);
+
+
+            // --------------------------------
+            // START
+            // --------------------------------
+
+            const startRange =
+                range.cloneRange();
+
+
+            startRange.selectNodeContents(
+                page
+            );
+
+
+            startRange.setEnd(
+                range.startContainer,
+                range.startOffset
+            );
+
+
+            const start =
+                startRange
+                    .toString()
+                    .length;
+
+
+            // --------------------------------
+            // END
+            // --------------------------------
+
+            const endRange =
+                range.cloneRange();
+
+
+            endRange.selectNodeContents(
+                page
+            );
+
+
+            endRange.setEnd(
+                range.endContainer,
+                range.endOffset
+            );
+
+
+            const end =
+                endRange
+                    .toString()
+                    .length;
+
+
+            const length =
+                end - start;
+
+
+            // --------------------------------
+            // NORMAL TYPING
+            // --------------------------------
+
+            if (
+                event.inputType ===
+                "insertText"
+            ) {
+
+                const text =
+                    event.data || "";
+
+
+                // Replace selected text.
+
+                if (length > 0) {
+
+                    const selected =
+                        documentChars.slice(
+                            start,
+                            end
+                        );
+
+
+                    const allowed =
+                        selected.every(
+                            (character) =>
+                                character.owner ===
+                                userId
+                        );
+
+
+                    if (!allowed) {
+
+                        console.log(
+                            "Cannot delete another user's characters."
+                        );
+
+                        setCaretIndex(
+                            start
+                        );
+
+                        return;
+
+                    }
+
+
+                    selected.forEach(
+                        deleteCharacter
+                    );
+
+                }
+
+
+                const inserted =
+                    insertText(
+                        start,
+                        text
+                    );
+
+
+                setCaretIndex(
+                    start + inserted
+                );
+
+
+                return;
+
+            }
+
+
+            // --------------------------------
+            // ENTER
+            // --------------------------------
+
+            if (
+                event.inputType ===
+                "insertParagraph"
+            ) {
+
+                if (length > 0) {
+
+                    const selected =
+                        documentChars.slice(
+                            start,
+                            end
+                        );
+
+
+                    const allowed =
+                        selected.every(
+                            (character) =>
+                                character.owner ===
+                                userId
+                        );
+
+
+                    if (!allowed) {
+
+                        setCaretIndex(
+                            start
+                        );
+
+                        return;
+
+                    }
+
+
+                    selected.forEach(
+                        deleteCharacter
+                    );
+
+                }
+
+
+                insertText(
+                    start,
+                    "\n"
+                );
+
+
+                setCaretIndex(
+                    start + 1
+                );
+
+
+                return;
+
+            }
+
+
+            // --------------------------------
+            // BACKSPACE
+            // --------------------------------
+
+            if (
+                event.inputType ===
+                "deleteContentBackward"
+            ) {
+
+                // Delete selection.
+
+                if (length > 0) {
+
+                    const selected =
+                        documentChars.slice(
+                            start,
+                            end
+                        );
+
+
+                    const allowed =
+                        selected.every(
+                            (character) =>
+                                character.owner ===
+                                userId
+                        );
+
+
+                    if (!allowed) {
+
+                        console.log(
+                            "Cannot delete another user's characters."
+                        );
+
+                        setCaretIndex(
+                            start
+                        );
+
+                        return;
+
+                    }
+
+
+                    selected.forEach(
+                        deleteCharacter
+                    );
+
+
+                    setCaretIndex(
+                        start
+                    );
+
+
+                    return;
+
+                }
+
+
+                // Nothing before cursor.
+
+                if (start <= 0) {
+                    return;
+                }
+
+
+                const character =
+                    documentChars[
+                        start - 1
+                    ];
+
+
+                if (
+                    deleteCharacter(
+                        character
+                    )
+                ) {
+
+                    setCaretIndex(
+                        start - 1
+                    );
+
+                }
+
+
+                return;
+
+            }
+
+
+            // --------------------------------
+            // DELETE KEY
+            // --------------------------------
+
+            if (
+                event.inputType ===
+                "deleteContentForward"
+            ) {
+
+                // Delete selection.
+
+                if (length > 0) {
+
+                    const selected =
+                        documentChars.slice(
+                            start,
+                            end
+                        );
+
+
+                    const allowed =
+                        selected.every(
+                            (character) =>
+                                character.owner ===
+                                userId
+                        );
+
+
+                    if (!allowed) {
+
+                        setCaretIndex(
+                            start
+                        );
+
+                        return;
+
+                    }
+
+
+                    selected.forEach(
+                        deleteCharacter
+                    );
+
+
+                    setCaretIndex(
+                        start
+                    );
+
+
+                    return;
+
+                }
+
+
+                // Nothing after cursor.
+
+                if (
+                    start >=
+                    documentChars.length
+                ) {
+
+                    return;
+
+                }
+
+
+                const character =
+                    documentChars[
+                        start
+                    ];
+
+
+                if (
+                    deleteCharacter(
+                        character
+                    )
+                ) {
+
+                    setCaretIndex(
+                        start
+                    );
+
+                }
+
+
+                return;
+
+            }
+
+        }
+    );
+
+
+    // --------------------------------
+    // PASTE
+    // --------------------------------
+
+    page.addEventListener(
+        "paste",
+        (event) => {
+
+            event.preventDefault();
+
+
+            const text =
+                event.clipboardData
+                    .getData("text");
+
+
+            if (!text) {
+                return;
+            }
+
+
+            // Reject the ENTIRE paste if
+            // it contains an emoji.
+
+            if (
+                containsEmoji(text)
+            ) {
+
+                console.log(
+                    "Blocked emoji paste."
+                );
+
+                return;
+
+            }
+
+
+            const start =
+                getCaretIndex();
+
+
+            const inserted =
+                insertText(
+                    start,
+                    text
+                );
+
+
+            setCaretIndex(
+                start + inserted
+            );
+
+        }
+    );
+
+
+    // --------------------------------
+    // LAST-RESORT DOM CLEANUP
+    // --------------------------------
+    //
+    // The notebook's real source of truth
+    // is documentChars.
+    //
+    // If the browser somehow manages to
+    // insert an emoji directly into the
+    // contenteditable DOM, immediately
+    // rebuild the DOM from documentChars.
+    // --------------------------------
+
+    page.addEventListener(
+        "input",
+        () => {
+
+            if (!initialised) {
+                return;
+            }
+
+
+            const currentText =
+                page.textContent || "";
+
+
+            if (
+                containsEmoji(
+                    currentText
+                )
+            ) {
+
+                console.log(
+                    "Emergency emoji cleanup."
+                );
+
+
+                renderInitialDocument();
+
+            }
+
+        }
+    );
+
+
+    // --------------------------------
+    // CONNECTION CLOSED
+    // --------------------------------
+
+    socket.addEventListener(
+        "close",
+        () => {
+
+            console.log(
+                "Disconnected from Internet Notebook."
+            );
+
+        }
+    );
+
+
+</script>
+
 </html>
