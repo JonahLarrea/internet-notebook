@@ -1,0 +1,4 @@
+node_modules/
+notebook-data.json
+.env
+.vs/
