@@ -74,6 +74,8 @@
             overflow-wrap: break-word;
 
             position: relative;
+
+            z-index: 1;
         }
 
 
@@ -85,9 +87,9 @@
 
             position: absolute;
 
-            left: 0;
-            right: 0;
-            top: 0;
+            left: 55px;
+            right: 55px;
+            top: 50px;
 
             pointer-events: none;
 
@@ -108,16 +110,15 @@
         }
 
 
-        /*
-         * Keep the actual text above
-         * the notebook lines.
-         */
+        /* --------------------------------
+           TEXT ABOVE LINES
+           -------------------------------- */
 
         .page > span {
 
             position: relative;
 
-            z-index: 1;
+            z-index: 2;
         }
 
 
@@ -128,6 +129,10 @@
             color: #aaa49b;
         }
 
+
+        /* --------------------------------
+           SUPPORT
+           -------------------------------- */
 
         .support {
 
@@ -153,6 +158,10 @@
         }
 
 
+        /* --------------------------------
+           FOOTER
+           -------------------------------- */
+
         footer {
 
             text-align: center;
@@ -164,6 +173,10 @@
             font-size: 13px;
         }
 
+
+        /* --------------------------------
+           MOBILE
+           -------------------------------- */
 
         @media (max-width: 600px) {
 
@@ -184,6 +197,14 @@
                 width: 95%;
 
                 padding: 30px 25px;
+            }
+
+
+            .notebook-lines {
+
+                left: 25px;
+                right: 25px;
+                top: 30px;
             }
 
 
@@ -217,12 +238,25 @@
 
 <main class="notebook">
 
+
+    <!--
+        The lines are deliberately outside
+        the editable page.
+    -->
+
+    <div
+        class="notebook-lines"
+        id="notebookLines"
+    ></div>
+
+
     <div
         id="page"
         class="page"
         contenteditable="true"
         spellcheck="true"
     ></div>
+
 
 </main>
 
@@ -282,6 +316,12 @@
         );
 
 
+    const notebookLines =
+        document.getElementById(
+            "notebookLines"
+        );
+
+
     let documentChars = [];
 
     let initialised = false;
@@ -302,15 +342,6 @@
 
     // --------------------------------
     // NOTEBOOK LINE SYSTEM
-    // --------------------------------
-    //
-    // The browser tells us where the
-    // actual text has been rendered.
-    //
-    // We then use the CSS line-height
-    // to place each notebook rule at
-    // the bottom of the corresponding
-    // text row.
     // --------------------------------
 
     let lineUpdateFrame = null;
@@ -344,26 +375,15 @@
     function drawNotebookLines() {
 
         /*
-         * Remove the old lines.
+         * Clear the existing lines.
          */
 
-        const oldLines =
-            page.querySelector(
-                ".notebook-lines"
-            );
-
-
-        if (oldLines) {
-
-            oldLines.remove();
-
-        }
+        notebookLines.innerHTML = "";
 
 
         /*
-         * If there is no text,
-         * there are no text lines
-         * to draw.
+         * Nothing to draw if the
+         * notebook is empty.
          */
 
         if (!page.textContent) {
@@ -371,6 +391,14 @@
             return;
 
         }
+
+
+        /*
+         * Get the actual page position.
+         */
+
+        const pageRect =
+            page.getBoundingClientRect();
 
 
         /*
@@ -385,14 +413,6 @@
             parseFloat(
                 computedStyle.lineHeight
             );
-
-
-        /*
-         * Get the page position.
-         */
-
-        const pageRect =
-            page.getBoundingClientRect();
 
 
         /*
@@ -423,10 +443,11 @@
 
 
         /*
-         * Store unique text rows.
+         * Group rectangles which belong
+         * to the same visual text row.
          */
 
-        const linePositions = [];
+        const rows = [];
 
 
         rects.forEach(
@@ -437,49 +458,47 @@
                     pageRect.top;
 
 
-                /*
-                 * Find which CSS text row
-                 * this rectangle belongs to.
-                 */
-
-                const row =
-                    Math.floor(
-                        top / lineHeight
-                    );
+                const bottom =
+                    rect.bottom -
+                    pageRect.top;
 
 
-                /*
-                 * Put the notebook line
-                 * at the bottom of that
-                 * text row.
-                 */
-
-                const lineY =
-                    (row + 1) *
-                    lineHeight;
-
-
-                /*
-                 * Avoid duplicate lines
-                 * when multiple characters
-                 * occupy the same row.
-                 */
-
-                const alreadyExists =
-                    linePositions.some(
-                        (existing) =>
+                const existingRow =
+                    rows.find(
+                        (row) =>
                             Math.abs(
-                                existing -
-                                lineY
+                                row.top -
+                                top
                             ) < 2
                     );
 
 
-                if (!alreadyExists) {
+                if (existingRow) {
 
-                    linePositions.push(
-                        lineY
-                    );
+                    existingRow.bottom =
+                        Math.max(
+                            existingRow.bottom,
+                            bottom
+                        );
+
+
+                    existingRow.height =
+                        Math.max(
+                            existingRow.height,
+                            rect.height
+                        );
+
+                } else {
+
+                    rows.push({
+
+                        top: top,
+
+                        bottom: bottom,
+
+                        height: rect.height
+
+                    });
 
                 }
 
@@ -488,45 +507,39 @@
 
 
         /*
-         * Sort the lines from top to bottom.
+         * Put the rows in order.
          */
 
-        linePositions.sort(
-            (a, b) => a - b
+        rows.sort(
+            (a, b) =>
+                a.top - b.top
         );
 
 
         /*
-         * Create the notebook line
-         * container.
+         * Draw one rule for each
+         * visual text row.
+         *
+         * The rule is placed halfway
+         * through the blank space below
+         * the rendered letters.
          */
 
-        const lines =
-            document.createElement(
-                "div"
-            );
+        rows.forEach(
+            (row) => {
+
+                const gap =
+                    Math.max(
+                        0,
+                        lineHeight -
+                        row.height
+                    );
 
 
-        lines.className =
-            "notebook-lines";
+                const lineY =
+                    row.bottom +
+                    (gap / 2);
 
-
-        /*
-         * Put it behind the text.
-         */
-
-        page.insertBefore(
-            lines,
-            page.firstChild
-        );
-
-
-        /*
-         * Draw the lines.
-         */
-
-        linePositions.forEach(
-            (lineY) => {
 
                 const line =
                     document.createElement(
@@ -542,7 +555,7 @@
                     `${lineY}px`;
 
 
-                lines.appendChild(
+                notebookLines.appendChild(
                     line
                 );
 
@@ -559,6 +572,24 @@
     window.addEventListener(
         "resize",
         updateNotebookLines
+    );
+
+
+    /*
+     * Mobile browsers can change their
+     * viewport after orientation changes.
+     */
+
+    window.addEventListener(
+        "orientationchange",
+        () => {
+
+            setTimeout(
+                updateNotebookLines,
+                100
+            );
+
+        }
     );
 
 
@@ -745,6 +776,7 @@
 
         selection.removeAllRanges();
 
+
         selection.addRange(
             range
         );
@@ -840,7 +872,9 @@
                 page.firstChild
             );
 
+
             updateNotebookLines();
+
 
             return;
 
@@ -858,6 +892,7 @@
             console.log(
                 "Could not find insertion point."
             );
+
 
             return;
 
@@ -1014,6 +1049,7 @@
                     console.log(
                         "Blocked emoji from entering browser."
                     );
+
 
                     return;
 
@@ -1196,6 +1232,7 @@
                 "Blocked emoji locally."
             );
 
+
             return 0;
 
         }
@@ -1311,6 +1348,7 @@
             console.log(
                 "That character belongs to someone else."
             );
+
 
             return false;
 
