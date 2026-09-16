@@ -16,6 +16,7 @@ app.use(express.static("public"));
 // --------------------------------
 
 const DATA_FILE =
+    process.env.NOTEBOOK_DATA_FILE ||
     path.join(__dirname, "notebook-data.json");
 
 let documentChars = [];
@@ -521,14 +522,15 @@ wss.on(
 // SERVER
 // --------------------------------
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 server.listen(
     PORT,
+    "0.0.0.0",
     () => {
 
         console.log(
-            `Internet Notebook running at http://localhost:${PORT}`
+            `Internet Notebook running on port ${PORT}`
         );
 
     }
