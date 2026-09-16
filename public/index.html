@@ -56,6 +56,11 @@
             position: relative;
         }
 
+
+        /* --------------------------------
+           NOTEBOOK PAGE
+           -------------------------------- */
+
         .page {
 
             min-height: 70vh;
@@ -66,60 +71,127 @@
             outline: none;
 
             white-space: pre-wrap;
+            overflow-wrap: break-word;
 
-            background-image:
-                linear-gradient(
-                    transparent 96%,
-                    #e4ded2 96%
-                );
-
-            background-size: 100% 1.8em;
+            position: relative;
         }
 
+
+        /* --------------------------------
+           NOTEBOOK LINES
+           -------------------------------- */
+
+        .notebook-lines {
+
+            position: absolute;
+
+            left: 0;
+            right: 0;
+            top: 0;
+
+            pointer-events: none;
+
+            z-index: 0;
+        }
+
+
+        .notebook-line {
+
+            position: absolute;
+
+            left: 0;
+            right: 0;
+
+            height: 1px;
+
+            background: #e4ded2;
+        }
+
+
+        /*
+         * Keep the actual text above
+         * the notebook lines.
+         */
+
+        .page > span {
+
+            position: relative;
+
+            z-index: 1;
+        }
+
+
         .page:empty:before {
+
             content: "Loading...";
+
             color: #aaa49b;
         }
 
+
         .support {
+
             text-align: center;
+
             margin: 0 auto 20px;
+
             font-size: 13px;
         }
 
+
         .support a {
+
             color: #8b857c;
+
             text-decoration: none;
         }
 
+
         .support a:hover {
+
             text-decoration: underline;
         }
 
+
         footer {
+
             text-align: center;
+
             padding: 20px;
+
             color: #8b857c;
+
             font-size: 13px;
         }
+
 
         @media (max-width: 600px) {
 
             header {
+
                 padding-top: 30px;
             }
 
+
             h1 {
+
                 font-size: 32px;
             }
 
+
             .notebook {
+
                 width: 95%;
+
                 padding: 30px 25px;
             }
 
+
             .page {
+
                 font-size: 18px;
+
+                line-height: 1.8;
             }
 
         }
@@ -162,7 +234,7 @@
         target="_blank"
         rel="noopener noreferrer"
     >
-       ❤️ help keep the notebook alive
+        ❤️ help keep the notebook alive
     </a>
 
 </div>
@@ -229,6 +301,268 @@
 
 
     // --------------------------------
+    // NOTEBOOK LINE SYSTEM
+    // --------------------------------
+    //
+    // The browser tells us where the
+    // actual text has been rendered.
+    //
+    // We then use the CSS line-height
+    // to place each notebook rule at
+    // the bottom of the corresponding
+    // text row.
+    // --------------------------------
+
+    let lineUpdateFrame = null;
+
+
+    function updateNotebookLines() {
+
+        if (lineUpdateFrame !== null) {
+
+            cancelAnimationFrame(
+                lineUpdateFrame
+            );
+
+        }
+
+
+        lineUpdateFrame =
+            requestAnimationFrame(
+                () => {
+
+                    lineUpdateFrame = null;
+
+                    drawNotebookLines();
+
+                }
+            );
+
+    }
+
+
+    function drawNotebookLines() {
+
+        /*
+         * Remove the old lines.
+         */
+
+        const oldLines =
+            page.querySelector(
+                ".notebook-lines"
+            );
+
+
+        if (oldLines) {
+
+            oldLines.remove();
+
+        }
+
+
+        /*
+         * If there is no text,
+         * there are no text lines
+         * to draw.
+         */
+
+        if (!page.textContent) {
+
+            return;
+
+        }
+
+
+        /*
+         * Get the actual CSS line height.
+         */
+
+        const computedStyle =
+            getComputedStyle(page);
+
+
+        const lineHeight =
+            parseFloat(
+                computedStyle.lineHeight
+            );
+
+
+        /*
+         * Get the page position.
+         */
+
+        const pageRect =
+            page.getBoundingClientRect();
+
+
+        /*
+         * Measure the actual rendered
+         * text.
+         */
+
+        const range =
+            document.createRange();
+
+
+        range.selectNodeContents(
+            page
+        );
+
+
+        const rects =
+            Array.from(
+                range.getClientRects()
+            );
+
+
+        if (!rects.length) {
+
+            return;
+
+        }
+
+
+        /*
+         * Store unique text rows.
+         */
+
+        const linePositions = [];
+
+
+        rects.forEach(
+            (rect) => {
+
+                const top =
+                    rect.top -
+                    pageRect.top;
+
+
+                /*
+                 * Find which CSS text row
+                 * this rectangle belongs to.
+                 */
+
+                const row =
+                    Math.floor(
+                        top / lineHeight
+                    );
+
+
+                /*
+                 * Put the notebook line
+                 * at the bottom of that
+                 * text row.
+                 */
+
+                const lineY =
+                    (row + 1) *
+                    lineHeight;
+
+
+                /*
+                 * Avoid duplicate lines
+                 * when multiple characters
+                 * occupy the same row.
+                 */
+
+                const alreadyExists =
+                    linePositions.some(
+                        (existing) =>
+                            Math.abs(
+                                existing -
+                                lineY
+                            ) < 2
+                    );
+
+
+                if (!alreadyExists) {
+
+                    linePositions.push(
+                        lineY
+                    );
+
+                }
+
+            }
+        );
+
+
+        /*
+         * Sort the lines from top to bottom.
+         */
+
+        linePositions.sort(
+            (a, b) => a - b
+        );
+
+
+        /*
+         * Create the notebook line
+         * container.
+         */
+
+        const lines =
+            document.createElement(
+                "div"
+            );
+
+
+        lines.className =
+            "notebook-lines";
+
+
+        /*
+         * Put it behind the text.
+         */
+
+        page.insertBefore(
+            lines,
+            page.firstChild
+        );
+
+
+        /*
+         * Draw the lines.
+         */
+
+        linePositions.forEach(
+            (lineY) => {
+
+                const line =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                line.className =
+                    "notebook-line";
+
+
+                line.style.top =
+                    `${lineY}px`;
+
+
+                lines.appendChild(
+                    line
+                );
+
+            }
+        );
+
+    }
+
+
+    // --------------------------------
+    // UPDATE LINES WHEN WINDOW CHANGES
+    // --------------------------------
+
+    window.addEventListener(
+        "resize",
+        updateNotebookLines
+    );
+
+
+    // --------------------------------
     // WEBSOCKET
     // --------------------------------
 
@@ -255,8 +589,13 @@
 
             socket.send(
                 JSON.stringify({
-                    type: "hello",
-                    userId: userId
+
+                    type:
+                        "hello",
+
+                    userId:
+                        userId
+
                 })
             );
 
@@ -289,7 +628,9 @@
 
 
         if (!selection.rangeCount) {
+
             return 0;
+
         }
 
 
@@ -329,7 +670,8 @@
             document.createRange();
 
 
-        let remaining = index;
+        let remaining =
+            index;
 
 
         function walk(node) {
@@ -352,9 +694,11 @@
                         remaining
                     );
 
+
                     range.collapse(
                         true
                     );
+
 
                     return true;
 
@@ -372,7 +716,9 @@
             ) {
 
                 if (walk(child)) {
+
                     return true;
+
                 }
 
             }
@@ -389,14 +735,19 @@
                 page
             );
 
-            range.collapse(false);
+
+            range.collapse(
+                false
+            );
 
         }
 
 
         selection.removeAllRanges();
 
-        selection.addRange(range);
+        selection.addRange(
+            range
+        );
 
     }
 
@@ -489,6 +840,8 @@
                 page.firstChild
             );
 
+            updateNotebookLines();
+
             return;
 
         }
@@ -511,7 +864,12 @@
         }
 
 
-        previous.after(element);
+        previous.after(
+            element
+        );
+
+
+        updateNotebookLines();
 
     }
 
@@ -527,8 +885,13 @@
 
 
         if (element) {
+
             element.remove();
+
         }
+
+
+        updateNotebookLines();
 
     }
 
@@ -545,13 +908,14 @@
         documentChars.forEach(
             (character) => {
 
-                // Extra browser-side protection.
                 if (
                     containsEmoji(
                         character.char
                     )
                 ) {
+
                     return;
+
                 }
 
 
@@ -567,6 +931,9 @@
 
             }
         );
+
+
+        updateNotebookLines();
 
     }
 
@@ -636,9 +1003,6 @@
                     data.character;
 
 
-                // Never allow an emoji
-                // into this browser.
-
                 if (
                     !character ||
                     typeof character.char !== "string" ||
@@ -674,7 +1038,8 @@
                         : null;
 
 
-                let insertIndex = 0;
+                let insertIndex =
+                    0;
 
 
                 if (
@@ -759,7 +1124,9 @@
 
 
                 if (index === -1) {
+
                     return;
+
                 }
 
 
@@ -821,10 +1188,6 @@
         text
     ) {
 
-        // ABSOLUTE EMOJI BLOCK.
-        // Nothing gets inserted locally.
-        // Nothing gets sent to the server.
-
         if (
             containsEmoji(text)
         ) {
@@ -844,8 +1207,6 @@
         for (
             const char of text
         ) {
-
-            // Double-check every character.
 
             if (
                 containsEmoji(char)
@@ -881,8 +1242,6 @@
             };
 
 
-            // Add locally FIRST.
-
             documentChars.splice(
                 index,
                 0,
@@ -894,8 +1253,6 @@
                 character
             );
 
-
-            // Then tell the server.
 
             if (
                 socket.readyState ===
@@ -928,6 +1285,9 @@
             inserted++;
 
         }
+
+
+        updateNotebookLines();
 
 
         return inserted;
@@ -964,7 +1324,9 @@
 
 
         if (index === -1) {
+
             return false;
+
         }
 
 
@@ -1013,13 +1375,14 @@
         (event) => {
 
             if (!initialised) {
+
                 return;
+
             }
 
 
             // --------------------------------
-            // BLOCK ALL EMOJI INSERTION TYPES
-            // BEFORE THE BROWSER CAN INSERT THEM
+            // BLOCK EMOJI INSERTION
             // --------------------------------
 
             if (
@@ -1055,9 +1418,11 @@
 
                     event.preventDefault();
 
+
                     console.log(
                         "Blocked emoji before browser insertion."
                     );
+
 
                     return;
 
@@ -1076,7 +1441,9 @@
             if (
                 !selection.rangeCount
             ) {
+
                 return;
+
             }
 
 
@@ -1151,8 +1518,6 @@
                     event.data || "";
 
 
-                // Replace selected text.
-
                 if (length > 0) {
 
                     const selected =
@@ -1176,9 +1541,11 @@
                             "Cannot delete another user's characters."
                         );
 
+
                         setCaretIndex(
                             start
                         );
+
 
                         return;
 
@@ -1241,6 +1608,7 @@
                             start
                         );
 
+
                         return;
 
                     }
@@ -1278,8 +1646,6 @@
                 "deleteContentBackward"
             ) {
 
-                // Delete selection.
-
                 if (length > 0) {
 
                     const selected =
@@ -1303,9 +1669,11 @@
                             "Cannot delete another user's characters."
                         );
 
+
                         setCaretIndex(
                             start
                         );
+
 
                         return;
 
@@ -1327,10 +1695,10 @@
                 }
 
 
-                // Nothing before cursor.
-
                 if (start <= 0) {
+
                     return;
+
                 }
 
 
@@ -1367,8 +1735,6 @@
                 "deleteContentForward"
             ) {
 
-                // Delete selection.
-
                 if (length > 0) {
 
                     const selected =
@@ -1392,6 +1758,7 @@
                             start
                         );
 
+
                         return;
 
                     }
@@ -1411,8 +1778,6 @@
 
                 }
 
-
-                // Nothing after cursor.
 
                 if (
                     start >=
@@ -1468,12 +1833,11 @@
 
 
             if (!text) {
+
                 return;
+
             }
 
-
-            // Reject the ENTIRE paste if
-            // it contains an emoji.
 
             if (
                 containsEmoji(text)
@@ -1482,6 +1846,7 @@
                 console.log(
                     "Blocked emoji paste."
                 );
+
 
                 return;
 
@@ -1510,22 +1875,15 @@
     // --------------------------------
     // LAST-RESORT DOM CLEANUP
     // --------------------------------
-    //
-    // The notebook's real source of truth
-    // is documentChars.
-    //
-    // If the browser somehow manages to
-    // insert an emoji directly into the
-    // contenteditable DOM, immediately
-    // rebuild the DOM from documentChars.
-    // --------------------------------
 
     page.addEventListener(
         "input",
         () => {
 
             if (!initialised) {
+
                 return;
+
             }
 
 
@@ -1548,6 +1906,9 @@
 
             }
 
+
+            updateNotebookLines();
+
         }
     );
 
@@ -1569,5 +1930,8 @@
 
 
 </script>
+
+
+</body>
 
 </html>
