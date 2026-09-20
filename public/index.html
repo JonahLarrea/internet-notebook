@@ -5,17 +5,25 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>The Internet Notebook</title>
 
-    <link rel="icon" type="image/png" href="/favicon.png">
+    <link
+        rel="icon"
+        type="image/png"
+        href="/favicon.png"
+    >
 
     <style>
 
         * {
             box-sizing: border-box;
         }
+
 
         body {
             margin: 0;
@@ -24,10 +32,12 @@
             font-family: Georgia, "Times New Roman", serif;
         }
 
+
         header {
             text-align: center;
             padding: 45px 20px 25px;
         }
+
 
         h1 {
             margin: 0;
@@ -36,11 +46,13 @@
             letter-spacing: 1px;
         }
 
+
         .subtitle {
             margin-top: 10px;
             color: #777168;
             font-size: 15px;
         }
+
 
         .notebook {
             width: 92%;
@@ -278,6 +290,14 @@
 
 
     // --------------------------------
+    // ADMIN
+    // --------------------------------
+
+    const ADMIN_USER_ID =
+        "4b3ae801-0da4-4e83-9eb2-13c5a7382a0c";
+
+
+    // --------------------------------
     // ANONYMOUS BROWSER ID
     // --------------------------------
 
@@ -300,10 +320,23 @@
     }
 
 
+    const isAdmin =
+        userId === ADMIN_USER_ID;
+
+
     console.log(
         "Your anonymous ID:",
         userId
     );
+
+
+    if (isAdmin) {
+
+        console.log(
+            "ADMIN MODE ENABLED."
+        );
+
+    }
 
 
     // --------------------------------
@@ -338,6 +371,120 @@
         );
 
     }
+
+
+    // --------------------------------
+    // BLOCK COPY / PASTE / CUT
+    // --------------------------------
+
+    function blockClipboardAction(event) {
+
+        event.preventDefault();
+
+        console.log(
+            "Clipboard action blocked."
+        );
+
+    }
+
+
+    page.addEventListener(
+        "copy",
+        blockClipboardAction
+    );
+
+
+    page.addEventListener(
+        "cut",
+        blockClipboardAction
+    );
+
+
+    page.addEventListener(
+        "paste",
+        blockClipboardAction
+    );
+
+
+    page.addEventListener(
+        "drop",
+        (event) => {
+
+            event.preventDefault();
+
+            console.log(
+                "Drop insertion blocked."
+            );
+
+        }
+    );
+
+
+    page.addEventListener(
+        "dragover",
+        (event) => {
+
+            event.preventDefault();
+
+        }
+    );
+
+
+    // Block right-click context menu.
+
+    page.addEventListener(
+        "contextmenu",
+        (event) => {
+
+            event.preventDefault();
+
+        }
+    );
+
+
+    // --------------------------------
+    // BLOCK COPY / PASTE KEYBOARD
+    // --------------------------------
+
+    page.addEventListener(
+        "keydown",
+        (event) => {
+
+            const modifier =
+                event.ctrlKey ||
+                event.metaKey;
+
+
+            if (!modifier) {
+                return;
+            }
+
+
+            const key =
+                event.key.toLowerCase();
+
+
+            // C = Copy
+            // V = Paste
+            // X = Cut
+
+            if (
+                key === "c" ||
+                key === "v" ||
+                key === "x"
+            ) {
+
+                event.preventDefault();
+
+                console.log(
+                    "Clipboard keyboard shortcut blocked:",
+                    key
+                );
+
+            }
+
+        }
+    );
 
 
     // --------------------------------
@@ -519,10 +666,6 @@
         /*
          * Draw one rule for each
          * visual text row.
-         *
-         * The rule is placed halfway
-         * through the blank space below
-         * the rendered letters.
          */
 
         rows.forEach(
@@ -574,11 +717,6 @@
         updateNotebookLines
     );
 
-
-    /*
-     * Mobile browsers can change their
-     * viewport after orientation changes.
-     */
 
     window.addEventListener(
         "orientationchange",
@@ -743,7 +881,7 @@
 
             for (
                 const child of
-                    node.childNodes
+                node.childNodes
             ) {
 
                 if (walk(child)) {
@@ -874,7 +1012,6 @@
 
 
             updateNotebookLines();
-
 
             return;
 
@@ -1340,10 +1477,24 @@
         character
     ) {
 
-        if (
-            character.owner !==
-            userId
-        ) {
+        if (!character) {
+
+            return false;
+
+        }
+
+
+        // Admin can delete ANY character.
+        //
+        // Normal users can only delete
+        // their own characters.
+
+        const allowed =
+            isAdmin ||
+            character.owner === userId;
+
+
+        if (!allowed) {
 
             console.log(
                 "That character belongs to someone else."
@@ -1420,51 +1571,40 @@
 
 
             // --------------------------------
-            // BLOCK EMOJI INSERTION
+            // ABSOLUTELY BLOCK PASTE / DROP
             // --------------------------------
 
             if (
-                event.inputType === "insertText" ||
-                event.inputType === "insertCompositionText" ||
-                event.inputType === "insertReplacementText" ||
-                event.inputType === "insertFromPaste" ||
-                event.inputType === "insertFromDrop"
+                event.inputType ===
+                    "insertFromPaste" ||
+
+                event.inputType ===
+                    "insertFromDrop"
             ) {
 
-                let incomingText =
-                    event.data || "";
+                event.preventDefault();
+
+                console.log(
+                    "Paste/drop insertion blocked."
+                );
+
+                return;
+
+            }
 
 
-                if (
-                    event.inputType ===
-                    "insertFromPaste"
-                ) {
+            // --------------------------------
+            // BLOCK OTHER BROWSER INSERTIONS
+            // --------------------------------
 
-                    incomingText =
-                        event.clipboardData
-                            ? event.clipboardData.getData("text")
-                            : incomingText;
+            if (
+                event.inputType ===
+                    "insertFromYank"
+            ) {
 
-                }
+                event.preventDefault();
 
-
-                if (
-                    containsEmoji(
-                        incomingText
-                    )
-                ) {
-
-                    event.preventDefault();
-
-
-                    console.log(
-                        "Blocked emoji before browser insertion."
-                    );
-
-
-                    return;
-
-                }
+                return;
 
             }
 
@@ -1568,6 +1708,7 @@
                     const allowed =
                         selected.every(
                             (character) =>
+                                isAdmin ||
                                 character.owner ===
                                 userId
                         );
@@ -1635,6 +1776,7 @@
                     const allowed =
                         selected.every(
                             (character) =>
+                                isAdmin ||
                                 character.owner ===
                                 userId
                         );
@@ -1696,6 +1838,7 @@
                     const allowed =
                         selected.every(
                             (character) =>
+                                isAdmin ||
                                 character.owner ===
                                 userId
                         );
@@ -1785,6 +1928,7 @@
                     const allowed =
                         selected.every(
                             (character) =>
+                                isAdmin ||
                                 character.owner ===
                                 userId
                         );
@@ -1858,52 +2002,54 @@
     // PASTE
     // --------------------------------
 
+    // IMPORTANT:
+    // Do NOT insert clipboard text.
+    // Pasting is completely disabled.
+
     page.addEventListener(
         "paste",
         (event) => {
 
             event.preventDefault();
 
+            console.log(
+                "Paste blocked."
+            );
 
-            const text =
-                event.clipboardData
-                    .getData("text");
-
-
-            if (!text) {
-
-                return;
-
-            }
+        }
+    );
 
 
-            if (
-                containsEmoji(text)
-            ) {
+    // --------------------------------
+    // COPY
+    // --------------------------------
 
-                console.log(
-                    "Blocked emoji paste."
-                );
+    page.addEventListener(
+        "copy",
+        (event) => {
 
+            event.preventDefault();
 
-                return;
+            console.log(
+                "Copy blocked."
+            );
 
-            }
-
-
-            const start =
-                getCaretIndex();
-
-
-            const inserted =
-                insertText(
-                    start,
-                    text
-                );
+        }
+    );
 
 
-            setCaretIndex(
-                start + inserted
+    // --------------------------------
+    // CUT
+    // --------------------------------
+
+    page.addEventListener(
+        "cut",
+        (event) => {
+
+            event.preventDefault();
+
+            console.log(
+                "Cut blocked."
             );
 
         }

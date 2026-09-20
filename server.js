@@ -12,6 +12,17 @@ app.use(express.static("public"));
 
 
 // --------------------------------
+// ADMIN
+// --------------------------------
+
+// This anonymous ID has permission to delete
+// ANY character in the notebook.
+
+const ADMIN_USER_ID =
+    "4b3ae801-0da4-4e83-9eb2-13c5a7382a0c";
+
+
+// --------------------------------
 // STORAGE
 // --------------------------------
 
@@ -314,6 +325,18 @@ wss.on(
                     }
 
 
+                    // Basic sanity check.
+                    // Anonymous IDs should be UUID-like.
+
+                    if (
+                        data.userId.length > 100
+                    ) {
+
+                        return;
+
+                    }
+
+
                     socket.userId =
                         data.userId;
 
@@ -322,6 +345,18 @@ wss.on(
                         "User connected:",
                         socket.userId
                     );
+
+
+                    if (
+                        socket.userId ===
+                        ADMIN_USER_ID
+                    ) {
+
+                        console.log(
+                            "ADMIN CONNECTED."
+                        );
+
+                    }
 
 
                     return;
@@ -550,15 +585,32 @@ wss.on(
                     // --------------------------------
                     // SERVER-SIDE OWNERSHIP CHECK
                     // --------------------------------
+                    //
+                    // Normal users can only delete
+                    // their own characters.
+                    //
+                    // ADMIN can delete ANY character.
+
+                    const isAdmin =
+                        socket.userId ===
+                        ADMIN_USER_ID;
+
+
+                    const isOwner =
+                        character.owner ===
+                        socket.userId;
+
 
                     if (
-                        character.owner !==
-                        socket.userId
+                        !isOwner &&
+                        !isAdmin
                     ) {
 
                         console.log(
                             "BLOCKED deletion by",
-                            socket.userId
+                            socket.userId,
+                            "of character owned by",
+                            character.owner
                         );
 
 
@@ -573,12 +625,27 @@ wss.on(
                     );
 
 
-                    console.log(
-                        "Deleted:",
-                        JSON.stringify(
-                            character.char
-                        )
-                    );
+                    if (isAdmin && !isOwner) {
+
+                        console.log(
+                            "ADMIN DELETED:",
+                            JSON.stringify(
+                                character.char
+                            ),
+                            "owned by",
+                            character.owner
+                        );
+
+                    } else {
+
+                        console.log(
+                            "Deleted:",
+                            JSON.stringify(
+                                character.char
+                            )
+                        );
+
+                    }
 
 
                     // SAVE
