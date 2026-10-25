@@ -9,17 +9,8 @@ const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static("public"));
 
-// --------------------------------
-// ADMIN
-// --------------------------------
-
-// This anonymous ID has permission to delete
-// any character in the notebook.
-
-const ADMIN_USER_ID =
-    "34fcbcbd-d20c-4f58-a8a9-fe6bcd594af0";
 
 // --------------------------------
 // STORAGE
@@ -31,6 +22,7 @@ const DATA_FILE =
 
 let documentChars = [];
 
+
 // --------------------------------
 // EMOJI DETECTION
 // --------------------------------
@@ -40,6 +32,7 @@ function containsEmoji(text) {
         text
     );
 }
+
 
 // --------------------------------
 // LOAD SAVED NOTEBOOK
@@ -54,29 +47,34 @@ function loadDocument() {
             return;
         }
 
-        const saved = fs.readFileSync(DATA_FILE, "utf8");
+        const saved = fs.readFileSync(
+            DATA_FILE,
+            "utf8"
+        );
+
         const parsed = JSON.parse(saved);
 
         if (Array.isArray(parsed)) {
-            // Remove emojis from previously saved data.
-            documentChars = parsed.filter((character) => {
-                if (
-                    !character ||
-                    typeof character.char !== "string"
-                ) {
-                    return false;
-                }
+            documentChars = parsed.filter(
+                (character) => {
+                    if (
+                        !character ||
+                        typeof character.char !== "string"
+                    ) {
+                        return false;
+                    }
 
-                if (containsEmoji(character.char)) {
-                    console.log(
-                        "Removed saved emoji:",
-                        JSON.stringify(character.char)
-                    );
-                    return false;
-                }
+                    if (containsEmoji(character.char)) {
+                        console.log(
+                            "Removed saved emoji:",
+                            JSON.stringify(character.char)
+                        );
+                        return false;
+                    }
 
-                return true;
-            });
+                    return true;
+                }
+            );
 
             console.log(
                 "Loaded saved Notebook:",
@@ -85,9 +83,13 @@ function loadDocument() {
             );
         }
     } catch (error) {
-        console.error("Could not load Notebook:", error);
+        console.error(
+            "Could not load Notebook:",
+            error
+        );
     }
 }
+
 
 // --------------------------------
 // SAVE NOTEBOOK
@@ -112,10 +114,14 @@ function saveDocument() {
 
             console.log("Notebook saved.");
         } catch (error) {
-            console.error("Could not save Notebook:", error);
+            console.error(
+                "Could not save Notebook:",
+                error
+            );
         }
     }, 500);
 }
+
 
 // --------------------------------
 // INITIAL LOAD
@@ -123,15 +129,12 @@ function saveDocument() {
 
 loadDocument();
 
+
 // --------------------------------
 // SEND DOCUMENT
 // --------------------------------
 
 function sendDocument(socket) {
-    if (socket.readyState !== WebSocket.OPEN) {
-        return;
-    }
-
     socket.send(
         JSON.stringify({
             type: "document",
@@ -139,6 +142,7 @@ function sendDocument(socket) {
         })
     );
 }
+
 
 // --------------------------------
 // BROADCAST
@@ -148,18 +152,21 @@ function broadcast(message) {
     const text = JSON.stringify(message);
 
     wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
+        if (
+            client.readyState === WebSocket.OPEN
+        ) {
             client.send(text);
         }
     });
 }
+
 
 // --------------------------------
 // FIND CHARACTER
 // --------------------------------
 
 function findIndex(id) {
-    if (id === null || id === undefined) {
+    if (id === null) {
         return -1;
     }
 
@@ -167,6 +174,7 @@ function findIndex(id) {
         (character) => character.id === id
     );
 }
+
 
 // --------------------------------
 // WEBSOCKET CONNECTION
@@ -177,14 +185,14 @@ wss.on("connection", (socket) => {
 
     socket.userId = null;
 
-    // Give the new user the current Notebook.
+    // Give new user the current Notebook.
     sendDocument(socket);
 
     socket.on("message", (rawMessage) => {
         let data;
 
         try {
-            data = JSON.parse(rawMessage.toString());
+            data = JSON.parse(rawMessage);
         } catch {
             return;
         }
@@ -199,22 +207,24 @@ wss.on("connection", (socket) => {
             }
 
             // Basic sanity check.
+            // Anonymous IDs should be UUID-like.
+
             if (data.userId.length > 100) {
                 return;
             }
 
             socket.userId = data.userId;
 
-            console.log("User connected:", socket.userId);
-
-            if (socket.userId === ADMIN_USER_ID) {
-                console.log("ADMIN CONNECTED.");
-            }
+            console.log(
+                "User connected:",
+                socket.userId
+            );
 
             return;
         }
 
         // Don't accept editing before identification.
+
         if (!socket.userId) {
             return;
         }
@@ -231,24 +241,27 @@ wss.on("connection", (socket) => {
                 return;
             }
 
-            // Server-side emoji block.
+            // Block emojis on the server.
+
             if (containsEmoji(data.char)) {
                 console.log(
                     "BLOCKED emoji from",
                     socket.userId
                 );
+
                 return;
             }
 
-            // Must be exactly one UTF-16 code unit,
-            // matching the original character handling.
+            // Must be one character.
+
             if (data.char.length !== 1) {
                 return;
             }
 
             const afterId = data.afterId ?? null;
 
-            // Prevent duplicate IDs.
+            // Don't allow duplicate IDs.
+
             if (findIndex(data.id) !== -1) {
                 return;
             }
@@ -273,7 +286,11 @@ wss.on("connection", (socket) => {
                 afterId: afterId
             };
 
-            documentChars.splice(insertIndex, 0, character);
+            documentChars.splice(
+                insertIndex,
+                0,
+                character
+            );
 
             console.log(
                 "Inserted:",
@@ -282,7 +299,11 @@ wss.on("connection", (socket) => {
                 socket.userId
             );
 
+            // SAVE
+
             saveDocument();
+
+            // TELL EVERYONE
 
             broadcast({
                 type: "insert",
@@ -309,41 +330,37 @@ wss.on("connection", (socket) => {
 
             const character = documentChars[index];
 
-            // Normal users can only delete their own characters.
-            // The admin can delete any character.
-            const isAdmin =
-                socket.userId === ADMIN_USER_ID;
+            // --------------------------------
+            // OWNERSHIP CHECK
+            // --------------------------------
+            // Users can only delete their own characters.
 
             const isOwner =
                 character.owner === socket.userId;
 
-            if (!isOwner && !isAdmin) {
+            if (!isOwner) {
                 console.log(
                     "BLOCKED deletion by",
                     socket.userId,
                     "of character owned by",
                     character.owner
                 );
+
                 return;
             }
 
             documentChars.splice(index, 1);
 
-            if (isAdmin && !isOwner) {
-                console.log(
-                    "ADMIN DELETED:",
-                    JSON.stringify(character.char),
-                    "owned by",
-                    character.owner
-                );
-            } else {
-                console.log(
-                    "Deleted:",
-                    JSON.stringify(character.char)
-                );
-            }
+            console.log(
+                "Deleted:",
+                JSON.stringify(character.char)
+            );
+
+            // SAVE
 
             saveDocument();
+
+            // TELL EVERYONE
 
             broadcast({
                 type: "delete",
@@ -357,11 +374,8 @@ wss.on("connection", (socket) => {
     socket.on("close", () => {
         console.log("Someone disconnected.");
     });
-
-    socket.on("error", (error) => {
-        console.error("WebSocket error:", error.message);
-    });
 });
+
 
 // --------------------------------
 // SERVER

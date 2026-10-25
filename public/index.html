@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -24,7 +25,6 @@
             box-sizing: border-box;
         }
 
-
         body {
             margin: 0;
             background: #eee9df;
@@ -32,12 +32,10 @@
             font-family: Georgia, "Times New Roman", serif;
         }
 
-
         header {
             text-align: center;
             padding: 45px 20px 25px;
         }
-
 
         h1 {
             margin: 0;
@@ -46,13 +44,11 @@
             letter-spacing: 1px;
         }
 
-
         .subtitle {
             margin-top: 10px;
             color: #777168;
             font-size: 15px;
         }
-
 
         .notebook {
             width: 92%;
@@ -68,95 +64,66 @@
             position: relative;
         }
 
-
         /* --------------------------------
            NOTEBOOK PAGE
            -------------------------------- */
 
         .page {
-
             min-height: 70vh;
-
             font-size: 21px;
             line-height: 1.8;
-
             outline: none;
-
             white-space: pre-wrap;
             overflow-wrap: break-word;
-
             position: relative;
-
             z-index: 1;
         }
-
 
         /* --------------------------------
            NOTEBOOK LINES
            -------------------------------- */
 
         .notebook-lines {
-
             position: absolute;
-
             left: 55px;
             right: 55px;
             top: 50px;
-
             pointer-events: none;
-
             z-index: 0;
         }
 
-
         .notebook-line {
-
             position: absolute;
-
             left: 0;
             right: 0;
-
             height: 1px;
-
             background: #e4ded2;
         }
-
 
         /* --------------------------------
            TEXT ABOVE LINES
            -------------------------------- */
 
         .page > span {
-
             position: relative;
-
             z-index: 2;
         }
 
-
         .page:empty:before {
-
             content: "Loading...";
-
             color: #aaa49b;
         }
-
 
         /* --------------------------------
            FOOTER
            -------------------------------- */
 
         footer {
-
             text-align: center;
-
             padding: 20px;
-
             color: #8b857c;
-
             font-size: 13px;
         }
-
 
         /* --------------------------------
            MOBILE
@@ -165,50 +132,36 @@
         @media (max-width: 600px) {
 
             header {
-
                 padding-top: 30px;
             }
 
-
             h1 {
-
                 font-size: 32px;
             }
 
-
             .notebook {
-
                 width: 95%;
-
                 padding: 30px 25px;
             }
 
-
             .notebook-lines {
-
                 left: 25px;
                 right: 25px;
                 top: 30px;
             }
 
-
             .page {
-
                 font-size: 18px;
-
                 line-height: 1.8;
             }
 
         }
 
-
     </style>
 
 </head>
 
-
 <body>
-
 
 <header>
 
@@ -220,20 +173,14 @@
 
 </header>
 
-
 <main class="notebook">
 
-
-    <!--
-        The lines are deliberately outside
-        the editable page.
-    -->
+    <!-- The lines are outside the editable page. -->
 
     <div
         class="notebook-lines"
         id="notebookLines"
     ></div>
-
 
     <div
         id="page"
@@ -242,47 +189,25 @@
         spellcheck="true"
     ></div>
 
-
 </main>
 
-
 <script>
-
-
-    // --------------------------------
-    // ADMIN
-    // --------------------------------
-
-    const ADMIN_USER_ID =
-        "34fcbcbd-d20c-4f58-a8a9-fe6bcd594af0";
-
 
     // --------------------------------
     // ANONYMOUS BROWSER ID
     // --------------------------------
 
     let userId =
-        localStorage.getItem(
-            "notebookUserId"
-        );
-
+        localStorage.getItem("notebookUserId");
 
     if (!userId) {
-
-        userId =
-            crypto.randomUUID();
+        userId = crypto.randomUUID();
 
         localStorage.setItem(
             "notebookUserId",
             userId
         );
-
     }
-
-
-    const isAdmin =
-        userId === ADMIN_USER_ID;
-
 
     console.log(
         "Your anonymous ID:",
@@ -290,30 +215,15 @@
     );
 
 
-    if (isAdmin) {
-
-        console.log(
-            "ADMIN MODE ENABLED."
-        );
-
-    }
-
-
     // --------------------------------
     // NOTEBOOK
     // --------------------------------
 
     const page =
-        document.getElementById(
-            "page"
-        );
-
+        document.getElementById("page");
 
     const notebookLines =
-        document.getElementById(
-            "notebookLines"
-        );
-
+        document.getElementById("notebookLines");
 
     let documentChars = [];
 
@@ -325,11 +235,9 @@
     // --------------------------------
 
     function containsEmoji(text) {
-
         return /[\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F\u200D]/u.test(
             text
         );
-
     }
 
 
@@ -338,66 +246,52 @@
     // --------------------------------
 
     function blockClipboardAction(event) {
-
         event.preventDefault();
 
         console.log(
             "Clipboard action blocked."
         );
-
     }
-
 
     page.addEventListener(
         "copy",
         blockClipboardAction
     );
 
-
     page.addEventListener(
         "cut",
         blockClipboardAction
     );
-
 
     page.addEventListener(
         "paste",
         blockClipboardAction
     );
 
-
     page.addEventListener(
         "drop",
         (event) => {
-
             event.preventDefault();
 
             console.log(
                 "Drop insertion blocked."
             );
-
         }
     );
-
 
     page.addEventListener(
         "dragover",
         (event) => {
-
             event.preventDefault();
-
         }
     );
-
 
     // Block right-click context menu.
 
     page.addEventListener(
         "contextmenu",
         (event) => {
-
             event.preventDefault();
-
         }
     );
 
@@ -409,40 +303,29 @@
     page.addEventListener(
         "keydown",
         (event) => {
-
             const modifier =
-                event.ctrlKey ||
-                event.metaKey;
-
+                event.ctrlKey || event.metaKey;
 
             if (!modifier) {
                 return;
             }
 
+            const key = event.key.toLowerCase();
 
-            const key =
-                event.key.toLowerCase();
-
-
-            // C = Copy
-            // V = Paste
-            // X = Cut
+            // C = Copy, V = Paste, X = Cut
 
             if (
                 key === "c" ||
                 key === "v" ||
                 key === "x"
             ) {
-
                 event.preventDefault();
 
                 console.log(
                     "Clipboard keyboard shortcut blocked:",
                     key
                 );
-
             }
-
         }
     );
 
@@ -453,218 +336,118 @@
 
     let lineUpdateFrame = null;
 
-
     function updateNotebookLines() {
-
         if (lineUpdateFrame !== null) {
-
-            cancelAnimationFrame(
-                lineUpdateFrame
-            );
-
+            cancelAnimationFrame(lineUpdateFrame);
         }
 
-
-        lineUpdateFrame =
-            requestAnimationFrame(
-                () => {
-
-                    lineUpdateFrame = null;
-
-                    drawNotebookLines();
-
-                }
-            );
-
+        lineUpdateFrame = requestAnimationFrame(() => {
+            lineUpdateFrame = null;
+            drawNotebookLines();
+        });
     }
-
 
     function drawNotebookLines() {
 
-        /*
-         * Clear the existing lines.
-         */
+        // Clear the existing lines.
 
         notebookLines.innerHTML = "";
 
-
-        /*
-         * Nothing to draw if the
-         * notebook is empty.
-         */
+        // Nothing to draw if the notebook is empty.
 
         if (!page.textContent) {
-
             return;
-
         }
 
-
-        /*
-         * Get the actual page position.
-         */
+        // Get the actual page position.
 
         const pageRect =
             page.getBoundingClientRect();
 
-
-        /*
-         * Get the actual CSS line height.
-         */
+        // Get the actual CSS line height.
 
         const computedStyle =
             getComputedStyle(page);
 
-
         const lineHeight =
-            parseFloat(
-                computedStyle.lineHeight
-            );
+            parseFloat(computedStyle.lineHeight);
 
+        // Measure the actual rendered text.
 
-        /*
-         * Measure the actual rendered
-         * text.
-         */
+        const range = document.createRange();
 
-        const range =
-            document.createRange();
-
-
-        range.selectNodeContents(
-            page
-        );
-
+        range.selectNodeContents(page);
 
         const rects =
-            Array.from(
-                range.getClientRects()
-            );
-
+            Array.from(range.getClientRects());
 
         if (!rects.length) {
-
             return;
-
         }
 
-
-        /*
-         * Group rectangles which belong
-         * to the same visual text row.
-         */
+        // Group rectangles belonging to the same visual text row.
 
         const rows = [];
 
+        rects.forEach((rect) => {
+            const top =
+                rect.top - pageRect.top;
 
-        rects.forEach(
-            (rect) => {
+            const bottom =
+                rect.bottom - pageRect.top;
 
-                const top =
-                    rect.top -
-                    pageRect.top;
-
-
-                const bottom =
-                    rect.bottom -
-                    pageRect.top;
-
-
-                const existingRow =
-                    rows.find(
-                        (row) =>
-                            Math.abs(
-                                row.top -
-                                top
-                            ) < 2
-                    );
-
-
-                if (existingRow) {
-
-                    existingRow.bottom =
-                        Math.max(
-                            existingRow.bottom,
-                            bottom
-                        );
-
-
-                    existingRow.height =
-                        Math.max(
-                            existingRow.height,
-                            rect.height
-                        );
-
-                } else {
-
-                    rows.push({
-
-                        top: top,
-
-                        bottom: bottom,
-
-                        height: rect.height
-
-                    });
-
-                }
-
-            }
-        );
-
-
-        /*
-         * Put the rows in order.
-         */
-
-        rows.sort(
-            (a, b) =>
-                a.top - b.top
-        );
-
-
-        /*
-         * Draw one rule for each
-         * visual text row.
-         */
-
-        rows.forEach(
-            (row) => {
-
-                const gap =
-                    Math.max(
-                        0,
-                        lineHeight -
-                        row.height
-                    );
-
-
-                const lineY =
-                    row.bottom +
-                    (gap / 2);
-
-
-                const line =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                line.className =
-                    "notebook-line";
-
-
-                line.style.top =
-                    `${lineY}px`;
-
-
-                notebookLines.appendChild(
-                    line
+            const existingRow =
+                rows.find(
+                    (row) =>
+                        Math.abs(row.top - top) < 2
                 );
 
-            }
-        );
+            if (existingRow) {
+                existingRow.bottom =
+                    Math.max(
+                        existingRow.bottom,
+                        bottom
+                    );
 
+                existingRow.height =
+                    Math.max(
+                        existingRow.height,
+                        rect.height
+                    );
+            } else {
+                rows.push({
+                    top: top,
+                    bottom: bottom,
+                    height: rect.height
+                });
+            }
+        });
+
+        // Put the rows in order.
+
+        rows.sort((a, b) => a.top - b.top);
+
+        // Draw one rule for each visual text row.
+
+        rows.forEach((row) => {
+            const gap =
+                Math.max(
+                    0,
+                    lineHeight - row.height
+                );
+
+            const lineY =
+                row.bottom + (gap / 2);
+
+            const line =
+                document.createElement("div");
+
+            line.className = "notebook-line";
+
+            line.style.top = `${lineY}px`;
+
+            notebookLines.appendChild(line);
+        });
     }
 
 
@@ -677,16 +460,10 @@
         updateNotebookLines
     );
 
-
     window.addEventListener(
         "orientationchange",
         () => {
-
-            setTimeout(
-                updateNotebookLines,
-                100
-            );
-
+            setTimeout(updateNotebookLines, 100);
         }
     );
 
@@ -700,36 +477,23 @@
             ? "wss:"
             : "ws:";
 
-
     const socket =
         new WebSocket(
             `${protocol}//${window.location.host}`
         );
 
+    socket.addEventListener("open", () => {
+        console.log(
+            "Connected to Internet Notebook."
+        );
 
-    socket.addEventListener(
-        "open",
-        () => {
-
-            console.log(
-                "Connected to Internet Notebook."
-            );
-
-
-            socket.send(
-                JSON.stringify({
-
-                    type:
-                        "hello",
-
-                    userId:
-                        userId
-
-                })
-            );
-
-        }
-    );
+        socket.send(
+            JSON.stringify({
+                type: "hello",
+                userId: userId
+            })
+        );
+    });
 
 
     // --------------------------------
@@ -737,12 +501,9 @@
     // --------------------------------
 
     function findCharacterIndex(id) {
-
         return documentChars.findIndex(
-            (character) =>
-                character.id === id
+            (character) => character.id === id
         );
-
     }
 
 
@@ -751,134 +512,63 @@
     // --------------------------------
 
     function getCaretIndex() {
-
-        const selection =
-            window.getSelection();
-
+        const selection = window.getSelection();
 
         if (!selection.rangeCount) {
-
             return 0;
-
         }
 
+        const range = selection.getRangeAt(0);
 
-        const range =
-            selection.getRangeAt(0);
+        const preRange = range.cloneRange();
 
-
-        const preRange =
-            range.cloneRange();
-
-
-        preRange.selectNodeContents(
-            page
-        );
-
+        preRange.selectNodeContents(page);
 
         preRange.setEnd(
             range.startContainer,
             range.startOffset
         );
 
-
-        return preRange
-            .toString()
-            .length;
-
+        return preRange.toString().length;
     }
 
-
     function setCaretIndex(index) {
+        const selection = window.getSelection();
 
-        const selection =
-            window.getSelection();
+        const range = document.createRange();
 
-
-        const range =
-            document.createRange();
-
-
-        let remaining =
-            index;
-
+        let remaining = index;
 
         function walk(node) {
+            if (node.nodeType === Node.TEXT_NODE) {
+                const length = node.textContent.length;
 
-            if (
-                node.nodeType ===
-                Node.TEXT_NODE
-            ) {
-
-                const length =
-                    node.textContent.length;
-
-
-                if (
-                    remaining <= length
-                ) {
-
-                    range.setStart(
-                        node,
-                        remaining
-                    );
-
-
-                    range.collapse(
-                        true
-                    );
-
-
+                if (remaining <= length) {
+                    range.setStart(node, remaining);
+                    range.collapse(true);
                     return true;
-
                 }
-
 
                 remaining -= length;
-
             }
 
-
-            for (
-                const child of
-                node.childNodes
-            ) {
-
+            for (const child of node.childNodes) {
                 if (walk(child)) {
-
                     return true;
-
                 }
-
             }
-
 
             return false;
-
         }
-
 
         if (!walk(page)) {
-
-            range.selectNodeContents(
-                page
-            );
-
-
-            range.collapse(
-                false
-            );
-
+            range.selectNodeContents(page);
+            range.collapse(false);
         }
-
 
         selection.removeAllRanges();
 
-
-        selection.addRange(
-            range
-        );
-
+        selection.addRange(range);
     }
 
 
@@ -886,40 +576,21 @@
     // CREATE CHARACTER DOM ELEMENT
     // --------------------------------
 
-    function createCharacterElement(
-        character
-    ) {
-
+    function createCharacterElement(character) {
         const span =
-            document.createElement(
-                "span"
-            );
+            document.createElement("span");
 
+        span.dataset.id = character.id;
 
-        span.dataset.id =
-            character.id;
+        span.dataset.owner = character.owner;
 
+        span.textContent = character.char;
 
-        span.dataset.owner =
-            character.owner;
-
-
-        span.textContent =
-            character.char;
-
-
-        if (
-            character.owner === userId
-        ) {
-
-            span.style.fontWeight =
-                "bold";
-
+        if (character.owner === userId) {
+            span.style.fontWeight = "bold";
         }
 
-
         return span;
-
     }
 
 
@@ -928,11 +599,9 @@
     // --------------------------------
 
     function findDomCharacter(id) {
-
         return page.querySelector(
             `[data-id="${id}"]`
         );
-
     }
 
 
@@ -940,69 +609,39 @@
     // INSERT INTO DOM
     // --------------------------------
 
-    function insertDomCharacter(
-        character
-    ) {
-
-        if (
-            findDomCharacter(
-                character.id
-            )
-        ) {
-
+    function insertDomCharacter(character) {
+        if (findDomCharacter(character.id)) {
             return;
-
         }
 
-
         const element =
-            createCharacterElement(
-                character
-            );
+            createCharacterElement(character);
 
-
-        if (
-            character.afterId === null
-        ) {
-
+        if (character.afterId === null) {
             page.insertBefore(
                 element,
                 page.firstChild
             );
 
-
             updateNotebookLines();
 
             return;
-
         }
 
-
         const previous =
-            findDomCharacter(
-                character.afterId
-            );
-
+            findDomCharacter(character.afterId);
 
         if (!previous) {
-
             console.log(
                 "Could not find insertion point."
             );
 
-
             return;
-
         }
 
-
-        previous.after(
-            element
-        );
-
+        previous.after(element);
 
         updateNotebookLines();
-
     }
 
 
@@ -1011,20 +650,13 @@
     // --------------------------------
 
     function deleteDomCharacter(id) {
-
-        const element =
-            findDomCharacter(id);
-
+        const element = findDomCharacter(id);
 
         if (element) {
-
             element.remove();
-
         }
 
-
         updateNotebookLines();
-
     }
 
 
@@ -1033,40 +665,20 @@
     // --------------------------------
 
     function renderInitialDocument() {
-
         page.innerHTML = "";
 
-
-        documentChars.forEach(
-            (character) => {
-
-                if (
-                    containsEmoji(
-                        character.char
-                    )
-                ) {
-
-                    return;
-
-                }
-
-
-                const element =
-                    createCharacterElement(
-                        character
-                    );
-
-
-                page.appendChild(
-                    element
-                );
-
+        documentChars.forEach((character) => {
+            if (containsEmoji(character.char)) {
+                return;
             }
-        );
 
+            const element =
+                createCharacterElement(character);
+
+            page.appendChild(element);
+        });
 
         updateNotebookLines();
-
     }
 
 
@@ -1074,307 +686,158 @@
     // SERVER MESSAGES
     // --------------------------------
 
-    socket.addEventListener(
-        "message",
-        (event) => {
+    socket.addEventListener("message", (event) => {
+        const data = JSON.parse(event.data);
 
-            const data =
-                JSON.parse(
-                    event.data
+        // -------------------------
+        // INITIAL DOCUMENT
+        // -------------------------
+
+        if (data.type === "document") {
+            documentChars =
+                (data.chars || []).filter(
+                    (character) =>
+                        typeof character.char === "string" &&
+                        !containsEmoji(character.char)
                 );
 
+            renderInitialDocument();
 
-            // -------------------------
-            // INITIAL DOCUMENT
-            // -------------------------
+            initialised = true;
 
-            if (
-                data.type ===
-                "document"
-            ) {
+            console.log(
+                "Notebook loaded:",
+                documentChars.length,
+                "characters"
+            );
 
-                documentChars =
-                    (data.chars || [])
-                        .filter(
-                            (character) =>
-                                typeof character.char === "string" &&
-                                !containsEmoji(
-                                    character.char
-                                )
-                        );
-
-
-                renderInitialDocument();
-
-
-                initialised = true;
-
-
-                console.log(
-                    "Notebook loaded:",
-                    documentChars.length,
-                    "characters"
-                );
-
-
-                return;
-
-            }
-
-
-            // -------------------------
-            // REMOTE INSERT
-            // -------------------------
-
-            if (
-                data.type ===
-                "insert"
-            ) {
-
-                const character =
-                    data.character;
-
-
-                if (
-                    !character ||
-                    typeof character.char !== "string" ||
-                    containsEmoji(
-                        character.char
-                    )
-                ) {
-
-                    console.log(
-                        "Blocked emoji from entering browser."
-                    );
-
-
-                    return;
-
-                }
-
-
-                if (
-                    findCharacterIndex(
-                        character.id
-                    ) !== -1
-                ) {
-
-                    return;
-
-                }
-
-
-                const caret =
-                    document.activeElement ===
-                    page
-                        ? getCaretIndex()
-                        : null;
-
-
-                let insertIndex =
-                    0;
-
-
-                if (
-                    character.afterId !==
-                    null
-                ) {
-
-                    const afterIndex =
-                        findCharacterIndex(
-                            character.afterId
-                        );
-
-
-                    if (
-                        afterIndex === -1
-                    ) {
-
-                        return;
-
-                    }
-
-
-                    insertIndex =
-                        afterIndex + 1;
-
-                }
-
-
-                documentChars.splice(
-                    insertIndex,
-                    0,
-                    character
-                );
-
-
-                insertDomCharacter(
-                    character
-                );
-
-
-                if (
-                    caret !== null
-                ) {
-
-                    if (
-                        insertIndex <= caret
-                    ) {
-
-                        setCaretIndex(
-                            caret + 1
-                        );
-
-                    } else {
-
-                        setCaretIndex(
-                            caret
-                        );
-
-                    }
-
-                }
-
-
-                return;
-
-            }
-
-
-            // -------------------------
-            // REMOTE DELETE
-            // -------------------------
-
-            if (
-                data.type ===
-                "delete"
-            ) {
-
-                const index =
-                    findCharacterIndex(
-                        data.id
-                    );
-
-
-                if (index === -1) {
-
-                    return;
-
-                }
-
-
-                const caret =
-                    document.activeElement ===
-                    page
-                        ? getCaretIndex()
-                        : null;
-
-
-                documentChars.splice(
-                    index,
-                    1
-                );
-
-
-                deleteDomCharacter(
-                    data.id
-                );
-
-
-                if (
-                    caret !== null
-                ) {
-
-                    if (
-                        index < caret
-                    ) {
-
-                        setCaretIndex(
-                            caret - 1
-                        );
-
-                    } else {
-
-                        setCaretIndex(
-                            caret
-                        );
-
-                    }
-
-                }
-
-
-                return;
-
-            }
-
+            return;
         }
-    );
+
+        // -------------------------
+        // REMOTE INSERT
+        // -------------------------
+
+        if (data.type === "insert") {
+            const character = data.character;
+
+            if (
+                !character ||
+                typeof character.char !== "string" ||
+                containsEmoji(character.char)
+            ) {
+                console.log(
+                    "Blocked emoji from entering browser."
+                );
+
+                return;
+            }
+
+            if (
+                findCharacterIndex(character.id) !== -1
+            ) {
+                return;
+            }
+
+            const caret =
+                document.activeElement === page
+                    ? getCaretIndex()
+                    : null;
+
+            let insertIndex = 0;
+
+            if (character.afterId !== null) {
+                const afterIndex =
+                    findCharacterIndex(character.afterId);
+
+                if (afterIndex === -1) {
+                    return;
+                }
+
+                insertIndex = afterIndex + 1;
+            }
+
+            documentChars.splice(
+                insertIndex,
+                0,
+                character
+            );
+
+            insertDomCharacter(character);
+
+            if (caret !== null) {
+                if (insertIndex <= caret) {
+                    setCaretIndex(caret + 1);
+                } else {
+                    setCaretIndex(caret);
+                }
+            }
+
+            return;
+        }
+
+        // -------------------------
+        // REMOTE DELETE
+        // -------------------------
+
+        if (data.type === "delete") {
+            const index =
+                findCharacterIndex(data.id);
+
+            if (index === -1) {
+                return;
+            }
+
+            const caret =
+                document.activeElement === page
+                    ? getCaretIndex()
+                    : null;
+
+            documentChars.splice(index, 1);
+
+            deleteDomCharacter(data.id);
+
+            if (caret !== null) {
+                if (index < caret) {
+                    setCaretIndex(caret - 1);
+                } else {
+                    setCaretIndex(caret);
+                }
+            }
+
+            return;
+        }
+    });
 
 
     // --------------------------------
     // LOCAL INSERT
     // --------------------------------
 
-    function insertText(
-        index,
-        text
-    ) {
-
-        if (
-            containsEmoji(text)
-        ) {
-
-            console.log(
-                "Blocked emoji locally."
-            );
-
-
+    function insertText(index, text) {
+        if (containsEmoji(text)) {
+            console.log("Blocked emoji locally.");
             return 0;
-
         }
-
 
         let inserted = 0;
 
-
-        for (
-            const char of text
-        ) {
-
-            if (
-                containsEmoji(char)
-            ) {
-
+        for (const char of text) {
+            if (containsEmoji(char)) {
                 continue;
-
             }
-
 
             const afterId =
                 index > 0
-                    ? documentChars[
-                        index - 1
-                    ].id
+                    ? documentChars[index - 1].id
                     : null;
 
-
             const character = {
-
-                id:
-                    crypto.randomUUID(),
-
-                char:
-                    char,
-
-                owner:
-                    userId,
-
-                afterId:
-                    afterId
-
+                id: crypto.randomUUID(),
+                char: char,
+                owner: userId,
+                afterId: afterId
             };
-
 
             documentChars.splice(
                 index,
@@ -1382,50 +845,26 @@
                 character
             );
 
+            insertDomCharacter(character);
 
-            insertDomCharacter(
-                character
-            );
-
-
-            if (
-                socket.readyState ===
-                WebSocket.OPEN
-            ) {
-
+            if (socket.readyState === WebSocket.OPEN) {
                 socket.send(
                     JSON.stringify({
-
-                        type:
-                            "insert",
-
-                        id:
-                            character.id,
-
-                        afterId:
-                            afterId,
-
-                        char:
-                            char
-
+                        type: "insert",
+                        id: character.id,
+                        afterId: afterId,
+                        char: char
                     })
                 );
-
             }
 
-
             index++;
-
             inserted++;
-
         }
-
 
         updateNotebookLines();
 
-
         return inserted;
-
     }
 
 
@@ -1433,85 +872,45 @@
     // LOCAL DELETE
     // --------------------------------
 
-    function deleteCharacter(
-        character
-    ) {
-
+    function deleteCharacter(character) {
         if (!character) {
-
             return false;
-
         }
 
-
-        // Admin can delete ANY character.
-        //
-        // Normal users can only delete
-        // their own characters.
+        // Users can only delete their own characters.
 
         const allowed =
-            isAdmin ||
             character.owner === userId;
 
-
         if (!allowed) {
-
             console.log(
                 "That character belongs to someone else."
             );
 
-
             return false;
-
         }
-
 
         const index =
-            findCharacterIndex(
-                character.id
-            );
-
+            findCharacterIndex(character.id);
 
         if (index === -1) {
-
             return false;
-
         }
 
+        documentChars.splice(index, 1);
 
-        documentChars.splice(
-            index,
-            1
-        );
+        deleteDomCharacter(character.id);
 
-
-        deleteDomCharacter(
-            character.id
-        );
-
-
-        if (
-            socket.readyState ===
-            WebSocket.OPEN
-        ) {
-
+        if (socket.readyState === WebSocket.OPEN) {
             socket.send(
                 JSON.stringify({
-
-                    type:
-                        "delete",
-
-                    id:
-                        character.id
-
+                    type: "delete",
+                    id: character.id
                 })
             );
-
         }
 
-
         return true;
-
     }
 
 
@@ -1519,564 +918,301 @@
     // BEFORE INPUT
     // --------------------------------
 
-    page.addEventListener(
-        "beforeinput",
-        (event) => {
+    page.addEventListener("beforeinput", (event) => {
+        if (!initialised) {
+            return;
+        }
 
-            if (!initialised) {
+        // Block paste and drop.
 
-                return;
-
-            }
-
-
-            // --------------------------------
-            // ABSOLUTELY BLOCK PASTE / DROP
-            // --------------------------------
-
-            if (
-                event.inputType ===
-                    "insertFromPaste" ||
-
-                event.inputType ===
-                    "insertFromDrop"
-            ) {
-
-                event.preventDefault();
-
-                console.log(
-                    "Paste/drop insertion blocked."
-                );
-
-
-                return;
-
-            }
-
-
-            // --------------------------------
-            // BLOCK OTHER BROWSER INSERTIONS
-            // --------------------------------
-
-            if (
-                event.inputType ===
-                    "insertFromYank"
-            ) {
-
-                event.preventDefault();
-
-
-                return;
-
-            }
-
-
+        if (
+            event.inputType === "insertFromPaste" ||
+            event.inputType === "insertFromDrop"
+        ) {
             event.preventDefault();
 
-
-            const selection =
-                window.getSelection();
-
-
-            if (
-                !selection.rangeCount
-            ) {
-
-                return;
-
-            }
-
-
-            const range =
-                selection.getRangeAt(0);
-
-
-            // --------------------------------
-            // START
-            // --------------------------------
-
-            const startRange =
-                range.cloneRange();
-
-
-            startRange.selectNodeContents(
-                page
+            console.log(
+                "Paste/drop insertion blocked."
             );
 
-
-            startRange.setEnd(
-                range.startContainer,
-                range.startOffset
-            );
-
-
-            const start =
-                startRange
-                    .toString()
-                    .length;
-
-
-            // --------------------------------
-            // END
-            // --------------------------------
-
-            const endRange =
-                range.cloneRange();
-
-
-            endRange.selectNodeContents(
-                page
-            );
-
-
-            endRange.setEnd(
-                range.endContainer,
-                range.endOffset
-            );
-
-
-            const end =
-                endRange
-                    .toString()
-                    .length;
-
-
-            const length =
-                end - start;
-
-
-            // --------------------------------
-            // NORMAL TYPING
-            // --------------------------------
-
-            if (
-                event.inputType ===
-                "insertText"
-            ) {
-
-                const text =
-                    event.data || "";
-
-
-                if (length > 0) {
-
-                    const selected =
-                        documentChars.slice(
-                            start,
-                            end
-                        );
-
-
-                    const allowed =
-                        selected.every(
-                            (character) =>
-                                isAdmin ||
-                                character.owner ===
-                                userId
-                        );
-
-
-                    if (!allowed) {
-
-                        console.log(
-                            "Cannot delete another user's characters."
-                        );
-
-
-                        setCaretIndex(
-                            start
-                        );
-
-
-                        return;
-
-                    }
-
-
-                    selected.forEach(
-                        deleteCharacter
-                    );
-
-                }
-
-
-                const inserted =
-                    insertText(
-                        start,
-                        text
-                    );
-
-
-                setCaretIndex(
-                    start + inserted
-                );
-
-
-                return;
-
-            }
-
-
-            // --------------------------------
-            // ENTER
-            // --------------------------------
-
-            if (
-                event.inputType ===
-                "insertParagraph"
-            ) {
-
-                if (length > 0) {
-
-                    const selected =
-                        documentChars.slice(
-                            start,
-                            end
-                        );
-
-
-                    const allowed =
-                        selected.every(
-                            (character) =>
-                                isAdmin ||
-                                character.owner ===
-                                userId
-                        );
-
-
-                    if (!allowed) {
-
-                        setCaretIndex(
-                            start
-                        );
-
-
-                        return;
-
-                    }
-
-
-                    selected.forEach(
-                        deleteCharacter
-                    );
-
-                }
-
-
-                insertText(
-                    start,
-                    "\n"
-                );
-
-
-                setCaretIndex(
-                    start + 1
-                );
-
-
-                return;
-
-            }
-
-
-            // --------------------------------
-            // BACKSPACE
-            // --------------------------------
-
-            if (
-                event.inputType ===
-                "deleteContentBackward"
-            ) {
-
-                if (length > 0) {
-
-                    const selected =
-                        documentChars.slice(
-                            start,
-                            end
-                        );
-
-
-                    const allowed =
-                        selected.every(
-                            (character) =>
-                                isAdmin ||
-                                character.owner ===
-                                userId
-                        );
-
-
-                    if (!allowed) {
-
-                        console.log(
-                            "Cannot delete another user's characters."
-                        );
-
-
-                        setCaretIndex(
-                            start
-                        );
-
-
-                        return;
-
-                    }
-
-
-                    selected.forEach(
-                        deleteCharacter
-                    );
-
-
-                    setCaretIndex(
-                        start
-                    );
-
-
-                    return;
-
-                }
-
-
-                if (start <= 0) {
-
-                    return;
-
-                }
-
-
-                const character =
-                    documentChars[
-                        start - 1
-                    ];
-
-
-                if (
-                    deleteCharacter(
-                        character
-                    )
-                ) {
-
-                    setCaretIndex(
-                        start - 1
-                    );
-
-                }
-
-
-                return;
-
-            }
-
-
-            // --------------------------------
-            // DELETE KEY
-            // --------------------------------
-
-            if (
-                event.inputType ===
-                "deleteContentForward"
-            ) {
-
-                if (length > 0) {
-
-                    const selected =
-                        documentChars.slice(
-                            start,
-                            end
-                        );
-
-
-                    const allowed =
-                        selected.every(
-                            (character) =>
-                                isAdmin ||
-                                character.owner ===
-                                userId
-                        );
-
-
-                    if (!allowed) {
-
-                        setCaretIndex(
-                            start
-                        );
-
-
-                        return;
-
-                    }
-
-
-                    selected.forEach(
-                        deleteCharacter
-                    );
-
-
-                    setCaretIndex(
-                        start
-                    );
-
-
-                    return;
-
-                }
-
-
-                if (
-                    start >=
-                    documentChars.length
-                ) {
-
-                    return;
-
-                }
-
-
-                const character =
-                    documentChars[
-                        start
-                    ];
-
-
-                if (
-                    deleteCharacter(
-                        character
-                    )
-                ) {
-
-                    setCaretIndex(
-                        start
-                    );
-
-                }
-
-
-                return;
-
-            }
-
+            return;
         }
-    );
+
+        // Block other browser insertions.
+
+        if (event.inputType === "insertFromYank") {
+            event.preventDefault();
+            return;
+        }
+
+        event.preventDefault();
+
+        const selection = window.getSelection();
+
+        if (!selection.rangeCount) {
+            return;
+        }
+
+        const range = selection.getRangeAt(0);
+
+        // START
+
+        const startRange = range.cloneRange();
+
+        startRange.selectNodeContents(page);
+
+        startRange.setEnd(
+            range.startContainer,
+            range.startOffset
+        );
+
+        const start =
+            startRange.toString().length;
+
+        // END
+
+        const endRange = range.cloneRange();
+
+        endRange.selectNodeContents(page);
+
+        endRange.setEnd(
+            range.endContainer,
+            range.endOffset
+        );
+
+        const end =
+            endRange.toString().length;
+
+        const length = end - start;
+
+        // --------------------------------
+        // NORMAL TYPING
+        // --------------------------------
+
+        if (event.inputType === "insertText") {
+            const text = event.data || "";
+
+            if (length > 0) {
+                const selected =
+                    documentChars.slice(start, end);
+
+                const allowed =
+                    selected.every(
+                        (character) =>
+                            character.owner === userId
+                    );
+
+                if (!allowed) {
+                    console.log(
+                        "Cannot delete another user's characters."
+                    );
+
+                    setCaretIndex(start);
+
+                    return;
+                }
+
+                selected.forEach(deleteCharacter);
+            }
+
+            const inserted =
+                insertText(start, text);
+
+            setCaretIndex(start + inserted);
+
+            return;
+        }
+
+        // --------------------------------
+        // ENTER
+        // --------------------------------
+
+        if (event.inputType === "insertParagraph") {
+            if (length > 0) {
+                const selected =
+                    documentChars.slice(start, end);
+
+                const allowed =
+                    selected.every(
+                        (character) =>
+                            character.owner === userId
+                    );
+
+                if (!allowed) {
+                    setCaretIndex(start);
+                    return;
+                }
+
+                selected.forEach(deleteCharacter);
+            }
+
+            insertText(start, "\n");
+
+            setCaretIndex(start + 1);
+
+            return;
+        }
+
+        // --------------------------------
+        // BACKSPACE
+        // --------------------------------
+
+        if (event.inputType === "deleteContentBackward") {
+            if (length > 0) {
+                const selected =
+                    documentChars.slice(start, end);
+
+                const allowed =
+                    selected.every(
+                        (character) =>
+                            character.owner === userId
+                    );
+
+                if (!allowed) {
+                    console.log(
+                        "Cannot delete another user's characters."
+                    );
+
+                    setCaretIndex(start);
+
+                    return;
+                }
+
+                selected.forEach(deleteCharacter);
+
+                setCaretIndex(start);
+
+                return;
+            }
+
+            if (start <= 0) {
+                return;
+            }
+
+            const character =
+                documentChars[start - 1];
+
+            if (deleteCharacter(character)) {
+                setCaretIndex(start - 1);
+            }
+
+            return;
+        }
+
+        // --------------------------------
+        // DELETE KEY
+        // --------------------------------
+
+        if (event.inputType === "deleteContentForward") {
+            if (length > 0) {
+                const selected =
+                    documentChars.slice(start, end);
+
+                const allowed =
+                    selected.every(
+                        (character) =>
+                            character.owner === userId
+                    );
+
+                if (!allowed) {
+                    setCaretIndex(start);
+                    return;
+                }
+
+                selected.forEach(deleteCharacter);
+
+                setCaretIndex(start);
+
+                return;
+            }
+
+            if (start >= documentChars.length) {
+                return;
+            }
+
+            const character =
+                documentChars[start];
+
+            if (deleteCharacter(character)) {
+                setCaretIndex(start);
+            }
+
+            return;
+        }
+    });
 
 
     // --------------------------------
     // PASTE
     // --------------------------------
 
-    // IMPORTANT:
-    // Do NOT insert clipboard text.
+    // Do not insert clipboard text.
     // Pasting is completely disabled.
 
-    page.addEventListener(
-        "paste",
-        (event) => {
+    page.addEventListener("paste", (event) => {
+        event.preventDefault();
 
-            event.preventDefault();
-
-            console.log(
-                "Paste blocked."
-            );
-
-        }
-    );
+        console.log("Paste blocked.");
+    });
 
 
     // --------------------------------
     // COPY
     // --------------------------------
 
-    page.addEventListener(
-        "copy",
-        (event) => {
+    page.addEventListener("copy", (event) => {
+        event.preventDefault();
 
-            event.preventDefault();
-
-            console.log(
-                "Copy blocked."
-            );
-
-        }
-    );
+        console.log("Copy blocked.");
+    });
 
 
     // --------------------------------
     // CUT
     // --------------------------------
 
-    page.addEventListener(
-        "cut",
-        (event) => {
+    page.addEventListener("cut", (event) => {
+        event.preventDefault();
 
-            event.preventDefault();
-
-            console.log(
-                "Cut blocked."
-            );
-
-        }
-    );
+        console.log("Cut blocked.");
+    });
 
 
     // --------------------------------
     // LAST-RESORT DOM CLEANUP
     // --------------------------------
 
-    page.addEventListener(
-        "input",
-        () => {
-
-            if (!initialised) {
-
-                return;
-
-            }
-
-
-            const currentText =
-                page.textContent || "";
-
-
-            if (
-                containsEmoji(
-                    currentText
-                )
-            ) {
-
-                console.log(
-                    "Emergency emoji cleanup."
-                );
-
-
-                renderInitialDocument();
-
-            }
-
-
-            updateNotebookLines();
-
+    page.addEventListener("input", () => {
+        if (!initialised) {
+            return;
         }
-    );
+
+        const currentText =
+            page.textContent || "";
+
+        if (containsEmoji(currentText)) {
+            console.log(
+                "Emergency emoji cleanup."
+            );
+
+            renderInitialDocument();
+        }
+
+        updateNotebookLines();
+    });
 
 
     // --------------------------------
     // CONNECTION CLOSED
     // --------------------------------
 
-    socket.addEventListener(
-        "close",
-        () => {
-
-            console.log(
-                "Disconnected from Internet Notebook."
-            );
-
-        }
-    );
-
+    socket.addEventListener("close", () => {
+        console.log(
+            "Disconnected from Internet Notebook."
+        );
+    });
 
 </script>
-
 
 </body>
 
