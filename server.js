@@ -19,11 +19,7 @@ app.use(express.static("public"));
 // ANY character in the notebook.
 
 const ADMIN_USER_ID =
-<<<<<<< HEAD
     "34fcbcbd-d20c-4f58-a8a9-fe6bcd594af0";
-=======
-    "4b3ae801-0da4-4e83-9eb2-13c5a7382a0c";
->>>>>>> origin/main
 
 
 // --------------------------------
